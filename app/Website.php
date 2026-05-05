@@ -39,6 +39,8 @@ class Website extends Site
         PostTypes\ProgettiDrama::register();
         PostTypes\AttivitaDoc::register();
         PostTypes\AttivitaDrama::register();
+        PostTypes\Producers::register();
+        flush_rewrite_rules();
     }
 
     #[Action("init")]
@@ -197,7 +199,9 @@ class Website extends Site
             is_singular("progetti-doc") ||
             is_singular("progetti-drama") ||
             is_singular("attivita-doc") ||
-            is_singular("attivita-drama")
+            is_singular("attivita-drama") ||
+            is_singular("producers") ||
+            is_post_type_archive("producers")
         ) {
             $section = "industry";
         }
@@ -261,6 +265,27 @@ class Website extends Site
                 "title" => "Bio to B | Drama",
             ];
             $breadcrumbs[] = ["url" => "", "title" => "Contents"];
+        } elseif (is_post_type_archive("producers")) {
+            $industry_page = get_page_by_path("industry");
+            $bio_to_bdrama_page = get_page_by_path("industry/bio-to-b-drama");
+            $breadcrumbs[] = ["url" => home_url("/"), "title" => "Biografilm"];
+            $breadcrumbs[] = [
+                "url" => $industry_page
+                    ? get_permalink($industry_page)
+                    : home_url("/"),
+                "title" => "Industry",
+            ];
+            $breadcrumbs[] = [
+                "url" => $bio_to_bdrama_page
+                    ? get_permalink($bio_to_bdrama_page)
+                    : "",
+                "title" => "Bio to B | Drama",
+            ];
+            $breadcrumbs[] = [
+                "url" => get_post_type_archive_link("contents-drama"),
+                "title" => "Contents",
+            ];
+            $breadcrumbs[] = ["url" => "", "title" => "Producers"];
         } elseif (is_post_type_archive("evento")) {
             $campus_page = get_page_by_path("campus");
             $breadcrumbs[] = ["url" => home_url("/"), "title" => "Biografilm"];
@@ -290,6 +315,41 @@ class Website extends Site
                 $breadcrumbs[] = [
                     "url" => get_post_type_archive_link("news"),
                     "title" => "News",
+                ];
+                $breadcrumbs[] = [
+                    "url" => "",
+                    "title" => get_the_title($post->ID),
+                ];
+            } elseif (get_post_type($post->ID) === "producers") {
+                $industry_page = get_page_by_path("industry");
+                $bio_to_bdrama_page = get_page_by_path("industry/bio-to-b-drama");
+                $producers_page = get_page_by_path("industry/bio-to-b-drama/producers")
+                    ?: get_page_by_path("producers");
+                $breadcrumbs[] = [
+                    "url" => home_url("/"),
+                    "title" => "Biografilm",
+                ];
+                $breadcrumbs[] = [
+                    "url" => $industry_page
+                        ? get_permalink($industry_page)
+                        : home_url("/"),
+                    "title" => "Industry",
+                ];
+                $breadcrumbs[] = [
+                    "url" => $bio_to_bdrama_page
+                        ? get_permalink($bio_to_bdrama_page)
+                        : "",
+                    "title" => "Bio to B | Drama",
+                ];
+                $breadcrumbs[] = [
+                    "url" => get_post_type_archive_link("contents-drama"),
+                    "title" => "Contents",
+                ];
+                $breadcrumbs[] = [
+                    "url" => $producers_page
+                        ? get_permalink($producers_page)
+                        : get_post_type_archive_link("producers"),
+                    "title" => "Producers",
                 ];
                 $breadcrumbs[] = [
                     "url" => "",
@@ -792,6 +852,15 @@ class Website extends Site
                     ];
                 }
                 return get_posts($args);
+            }),
+        );
+        $twig->addFunction(
+            new \Twig\TwigFunction("get_producers_random", function () {
+                return get_posts([
+                    "post_type"   => "producers",
+                    "numberposts" => 4,
+                    "orderby"     => "rand",
+                ]);
             }),
         );
         return $twig;

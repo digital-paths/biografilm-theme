@@ -1,0 +1,54 @@
+<section class="w-full">
+  {% set items = get_producers_random() %}
+
+  {% if component.title or component.link %}
+    <div
+      class="border-stroke flex flex-col items-start justify-between gap-y-3 border-b px-6 pt-20 pb-10 xl:flex-row xl:items-center xl:px-10 xl:pt-30 xl:pb-20"
+    >
+      {% if component.title %}
+        <h4 class="heading-h4 blur-in font-semibold">{{ component.title }}</h4>
+      {% endif %}
+      {% if component.link %}
+        <a
+          href="{{ component.link.url }}"
+          target="{{ component.link.target ? : "_self" }}"
+          class="blur-in text-tight text-red group flex items-center gap-2 text-xl font-semibold"
+        >
+          <span class="link-underline">{{ component.link.title }}</span>
+          {{
+            include("icons/generic/arrow-right.svg")|attr({
+              class: "size-6 transition-transform duration-500 ease-out group-hover:translate-x-2"
+            })
+          }}
+        </a>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  {% if items %}
+    {% set count = items|length %}
+    {% set show_nav = count > 1 %}
+    <div
+      class="swiper producers-displayer-swiper {{
+      show_nav
+        ? "producers-displayer-swiper--has-nav"
+        : ""
+      }}"
+    >
+      <div class="swiper-wrapper">
+        {% for item in items %}
+          <div class="swiper-slide">
+            {{ include("parts/cards/producers-card.twig") }}
+          </div>
+        {% endfor %}
+      </div>
+      {% if show_nav %}
+        <div class="hero-carousel-nav producers-displayer-nav border-b-0">
+          <button class="swiper-button-prev" aria-label="Precedente"></button>
+          <div class="swiper-pagination" role="tablist"></div>
+          <button class="swiper-button-next" aria-label="Successivo"></button>
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+</section>

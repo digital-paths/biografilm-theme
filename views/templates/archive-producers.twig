@@ -1,0 +1,49 @@
+{% extends "base.twig" %}
+
+{% block hero %}
+  {{
+    include(
+      "components/hero/hero.twig",
+      { hero_title: "Producers", hero_title_style: "primary" }
+    )
+  }}
+{% endblock hero %}
+
+{% block content %}
+  {% set count = posts|length %}
+  {% set remainder_3col = count % 3 %}
+  {% set filler_3col = remainder_3col > 0 ? 3 - remainder_3col : 0 %}
+  {% set remainder_4col = count % 4 %}
+  {% set filler_4col = remainder_4col > 0 ? 4 - remainder_4col : 0 %}
+  {% set is_odd = count % 2 == 1 %}
+  <div class="border-stroke 3xl:grid-cols-4 grid grid-cols-1 border-t md:grid-cols-2 xl:grid-cols-3">
+    {% for item in posts %}
+      {{ include("parts/cards/producers-card.twig") }}
+    {% endfor %}
+    {% if is_odd %}
+      <div class="border-stroke col-span-1 border-b border-l xl:hidden"></div>
+    {% endif %}
+    {% if filler_3col > 0 %}
+      {% for i in 1..filler_3col %}
+        <div
+          class="border-stroke 3xl:hidden col-span-1 hidden xl:block {{
+          loop.first ? 'border-l' : ''
+          }}"
+        ></div>
+      {% endfor %}
+    {% endif %}
+    {% if filler_4col > 0 %}
+      {% for i in 1..filler_4col %}
+        <div
+          class="border-stroke 3xl:block col-span-1 hidden {{
+          loop.first ? 'border-l' : ''
+          }}"
+        ></div>
+      {% endfor %}
+    {% endif %}
+  </div>
+
+  {% include "parts/pagination.twig" with {
+    pagination: posts.pagination({ show_all: false, mid_size: 3, end_size: 2 })
+  } %}
+{% endblock content %}

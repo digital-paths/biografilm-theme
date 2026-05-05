@@ -1,0 +1,68 @@
+{% extends "base.twig" %}
+
+{% block hero %}
+  {% set hero_title = post.title %}
+  {% set hero_title_style = "news" %}
+  {{ include("components/hero/hero.twig") }}
+{% endblock hero %}
+
+{% block content %}
+  <article>
+    <div class="xl:w-2/3">
+      {% if post.content or post.thumbnail %}
+        <div
+          class="prose-content prose border-stroke max-w-none px-6 pb-10 text-xl leading-[150%] text-black/80 xl:px-10 xl:pb-12"
+        >
+          {% if post.thumbnail %}
+            <img
+              src="{{ post.thumbnail.src("large") }}"
+              alt="{{ post.thumbnail.alt }}"
+              class="not-prose mb-10 max-h-24 w-auto object-contain xl:mb-12"
+            />
+          {% endif %}
+          {{ post.content }}
+        </div>
+      {% endif %}
+
+    </div>
+  </article>
+
+  {% set whos_coming = function("get_field", "whos_coming", post.ID) %}
+  {% set whos_coming_titolo = function("get_field", "titolo", post.ID) %}
+  {% set whos_coming_sottotitolo = function("get_field", "sottotitolo", post.ID) %}
+  {% if whos_coming %}
+    {% if whos_coming_titolo or whos_coming_sottotitolo %}
+      <div class="border-stroke flex flex-col border-b px-6 pt-20 pb-10 xl:px-10 xl:pt-30 xl:pb-20">
+        <div class="flex flex-col gap-6 xl:w-2/3">
+          {% if whos_coming_titolo %}
+            <h2 class="heading-h4 blur-in font-semibold">{{ whos_coming_titolo }}</h2>
+          {% endif %}
+          {% if whos_coming_sottotitolo %}
+            <p class="blur-in max-w-pros text-xl text-black/80">{{ whos_coming_sottotitolo }}</p>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+    {% set count = whos_coming|length %}
+    {% set remainder_3col = count % 3 %}
+    {% set filler_3col = remainder_3col > 0 ? 3 - remainder_3col : 0 %}
+    {% set is_odd = count % 2 == 1 %}
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
+      {% for person in whos_coming %}
+        {{ include("parts/cards/whos-coming-card.twig", { person: person, extra_class: "" }) }}
+      {% endfor %}
+      {% if is_odd %}
+        <div class="border-stroke col-span-1 border-b border-l xl:hidden"></div>
+      {% endif %}
+      {% if filler_3col > 0 %}
+        {% for i in 1..filler_3col %}
+          <div
+            class="border-stroke col-span-1 hidden border-b xl:block {{
+            loop.first ? 'border-l' : ''
+            }}"
+          ></div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  {% endif %}
+{% endblock content %}

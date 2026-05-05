@@ -157,6 +157,13 @@
             {% endif %}
           </div>
         {% endif %}
+      {% elseif layout == "producers" %}
+        {{
+          include(
+            "components/producers-displayer/producers-displayer.twig",
+            { component: row }
+          )
+        }}
       {% elseif layout == "text_displayer" %}
         {{
           include(

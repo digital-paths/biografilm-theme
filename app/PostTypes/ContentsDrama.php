@@ -177,6 +177,12 @@ class ContentsDrama extends \Timber\Post
                                             ->filters(["search"])
                                             ->elements(["featured_image"]),
                                     ]),
+                                Layout::make("Producers", "producers")
+                                    ->key("layout_contents_drama_extra_producers")
+                                    ->fields(
+                                        require get_stylesheet_directory() .
+                                            "/views/components/producers-displayer/producers-displayer.php"
+                                    ),
                                 Layout::make("Text Displayer", "text_displayer")
                                     ->key("layout_contents_drama_extra_text_displayer")
                                     ->fields($text_displayer_fields),
