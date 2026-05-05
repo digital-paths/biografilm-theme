@@ -183,6 +183,12 @@ class ContentsDrama extends \Timber\Post
                                         require get_stylesheet_directory() .
                                             "/views/components/producers-displayer/producers-displayer.php"
                                     ),
+                                Layout::make("Publishers", "publishers")
+                                    ->key("layout_contents_drama_extra_publishers")
+                                    ->fields(
+                                        require get_stylesheet_directory() .
+                                            "/views/components/publishers-displayer/publishers-displayer.php"
+                                    ),
                                 Layout::make("Text Displayer", "text_displayer")
                                     ->key("layout_contents_drama_extra_text_displayer")
                                     ->fields($text_displayer_fields),

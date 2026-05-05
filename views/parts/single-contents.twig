@@ -164,6 +164,13 @@
             { component: row }
           )
         }}
+      {% elseif layout == "publishers" %}
+        {{
+          include(
+            "components/publishers-displayer/publishers-displayer.twig",
+            { component: row }
+          )
+        }}
       {% elseif layout == "text_displayer" %}
         {{
           include(

@@ -1,0 +1,222 @@
+{% extends "base.twig" %}
+
+{% block hero %}
+
+{% endblock hero %}
+
+{% block content %}
+  {% set post_id = post.ID %}
+  {% set paese = function("wp_get_post_terms", post_id, "pe-paese") %}
+  {% set genere = function("wp_get_post_terms", post_id, "pe-genere")[0] %}
+  {% set autore = function("get_field", "autore", post_id) %}
+  {% set altri_autori = function("get_field", "altri_autori", post_id) %}
+  {% set tutti_autori = autore ? [autore] : [] %}
+  {% if altri_autori %}
+    {% for r in altri_autori %}
+      {% set tutti_autori = tutti_autori|merge([r.nome]) %}
+    {% endfor %}
+  {% endif %}
+  {% set traduttore = function("get_field", "traduttore", post_id) %}
+  {% set editore = function("get_field", "editore", post_id) %}
+  {% set collana = function("get_field", "collana", post_id) %}
+  {% set anno = function("get_field", "anno", post_id) %}
+  {% set pagine = function("get_field", "pagine", post_id) %}
+  {% set lingua = function("get_field", "lingua", post_id) %}
+  {% set isbn = function("get_field", "isbn", post_id) %}
+  {% set description = function("get_field", "description", post_id) %}
+  {% set info_aggiuntive = function("get_field", "info_aggiuntive", post_id) %}
+
+  <div
+    class="border-b-stroke 3xl:grid-cols-4 mx-auto mt-[108px] grid grid-cols-3 border-b"
+  >
+    <div
+      class="3xl:col-span-3 col-span-3 flex flex-col gap-10 pt-20 pr-6 pb-20 pl-6 lg:gap-20 xl:col-span-2 xl:pr-10 xl:pb-30 2xl:pr-10 2xl:pr-30 2xl:pl-10"
+    >
+      <div class="blur-in flex flex-col gap-6">
+        {{ include("parts/breadcrumbs.twig") }}
+        <h1 class="display-h1-tertiary blur-in">{{ post.title }}</h1>
+        {% if post.thumbnail %}
+          <img
+            src="{{ post.thumbnail.src("large") }}"
+            alt="{{ post.title }}"
+            class="blur-in h-120 w-fit"
+          />
+        {% endif %}
+      </div>
+
+      <div
+        class="grid grid-cols-[auto_1fr] lg:grid-cols-[minmax(auto,_220px)_1fr]"
+      >
+        {% if tutti_autori %}
+          <div class="contents">
+            <span
+              class="blur-in border-stroke text-tight border-b pr-8 pb-6 text-base lg:pr-16 lg:text-xl"
+            >
+              {{ altri_autori ? "Autori" : "Autore" }}
+            </span>
+            <span
+              class="blur-in border-stroke text-tight border-b pb-6 text-base font-semibold lg:text-xl"
+            >
+              {{ tutti_autori|join(", ") }}
+            </span>
+          </div>
+        {% endif %}
+        {% if traduttore %}
+          <div class="contents">
+            <span
+              class="blur-in border-stroke text-tight border-b py-6 pr-8 text-base lg:pr-16 lg:text-xl"
+            >
+              Traduttore
+            </span>
+            <span
+              class="blur-in border-stroke text-tight border-b py-6 text-base font-semibold lg:text-xl"
+            >
+              {{ traduttore }}
+            </span>
+          </div>
+        {% endif %}
+        {% if editore %}
+          <div class="contents">
+            <span
+              class="blur-in border-stroke text-tight border-b py-6 pr-8 text-base lg:pr-16 lg:text-xl"
+            >
+              Editore
+            </span>
+            <span
+              class="blur-in border-stroke text-tight border-b py-6 text-base font-semibold lg:text-xl"
+            >
+              <a
+                href="{{ function("get_permalink", editore.ID) }}"
+                class="text-red hover:text-red-hover underline underline-offset-2 transition-colors"
+              >
+                {{ editore.post_title }}
+              </a>
+            </span>
+          </div>
+        {% endif %}
+        {% if collana %}
+          <div class="contents">
+            <span
+              class="blur-in border-stroke text-tight border-b py-6 pr-8 text-base lg:pr-16 lg:text-xl"
+            >
+              Collana
+            </span>
+            <span
+              class="blur-in border-stroke text-tight border-b py-6 text-base font-semibold lg:text-xl"
+            >
+              {{ collana }}
+            </span>
+          </div>
+        {% endif %}
+        {% if anno %}
+          <div class="contents">
+            <span
+              class="blur-in border-stroke text-tight border-b py-6 pr-8 text-base lg:pr-16 lg:text-xl"
+            >
+              Anno
+            </span>
+            <span
+              class="blur-in border-stroke text-tight border-b py-6 text-base font-semibold lg:text-xl"
+            >
+              {{ anno }}
+            </span>
+          </div>
+        {% endif %}
+        {% if pagine %}
+          <div class="contents">
+            <span
+              class="blur-in border-stroke text-tight border-b py-6 pr-8 text-base lg:pr-16 lg:text-xl"
+            >
+              Pagine
+            </span>
+            <span
+              class="blur-in border-stroke text-tight border-b py-6 text-base font-semibold lg:text-xl"
+            >
+              {{ pagine }}
+            </span>
+          </div>
+        {% endif %}
+        {% if lingua %}
+          <div class="contents">
+            <span
+              class="blur-in border-stroke text-tight border-b py-6 pr-8 text-base lg:pr-16 lg:text-xl"
+            >
+              Lingua originale
+            </span>
+            <span
+              class="blur-in border-stroke text-tight border-b py-6 text-base font-semibold lg:text-xl"
+            >
+              {{ lingua }}
+            </span>
+          </div>
+        {% endif %}
+        {% if paese %}
+          <div class="contents">
+            <span
+              class="blur-in border-stroke text-tight border-b py-6 pr-8 text-base lg:pr-16 lg:text-xl"
+            >
+              Paese
+            </span>
+            <span
+              class="blur-in border-stroke text-tight border-b py-6 text-base font-semibold lg:text-xl"
+            >
+              {{ paese|map(t => t.name)|join(", ") }}
+            </span>
+          </div>
+        {% endif %}
+        {% if genere %}
+          <div class="contents">
+            <span
+              class="blur-in border-stroke text-tight border-b py-6 pr-8 text-base lg:pr-16 lg:text-xl"
+            >
+              Genere
+            </span>
+            <span
+              class="blur-in border-stroke text-tight border-b py-6 text-base font-semibold lg:text-xl"
+            >
+              {{ genere.name }}
+            </span>
+          </div>
+        {% endif %}
+        {% if isbn %}
+          <div class="contents">
+            <span
+              class="blur-in border-stroke text-tight border-b py-6 pr-8 text-base lg:pr-16 lg:text-xl"
+            >
+              ISBN
+            </span>
+            <span
+              class="blur-in border-stroke text-tight border-b py-6 text-base font-semibold lg:text-xl"
+            >
+              {{ isbn }}
+            </span>
+          </div>
+        {% endif %}
+        {% if info_aggiuntive %}
+          {% for row in info_aggiuntive %}
+            <div class="blur-in contents">
+              <span
+                class="border-stroke text-tight border-b py-6 pr-8 text-base lg:pr-16 lg:text-xl"
+              >
+                {{ row.titolo }}
+              </span>
+              <div
+                class="prose border-stroke border-b py-6 text-base lg:text-xl"
+              >
+                {{ row.contenuto|raw }}
+              </div>
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+
+      {% if description %}
+        <div
+          class="blur-in prose font-regular max-w-none text-base leading-[150%] text-black/80"
+        >
+          {{ description }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock content %}
