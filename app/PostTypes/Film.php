@@ -9,7 +9,6 @@ use Extended\ACF\Fields\Repeater;
 use Extended\ACF\Fields\Tab;
 use Extended\ACF\Fields\Taxonomy;
 use Extended\ACF\Fields\Text;
-use Extended\ACF\Fields\Textarea;
 use Extended\ACF\Fields\WYSIWYGEditor;
 use Extended\ACF\Location;
 
@@ -24,20 +23,24 @@ class Film extends \Timber\Post
     public function get_proiezioni(): array
     {
         $wp_posts = get_posts([
-            "post_type"   => "proiezione",
+            "post_type" => "proiezione",
             "numberposts" => -1,
-            "meta_query"  => [
+            "meta_query" => [
                 [
-                    "key"     => "film",
-                    "value"   => '"' . $this->ID . '"',
+                    "key" => "film",
+                    "value" => '"' . $this->ID . '"',
                     "compare" => "LIKE",
                 ],
             ],
         ]);
 
         usort($wp_posts, function ($a, $b) {
-            $key_a = get_post_meta($a->ID, "data", true) . get_post_meta($a->ID, "orario", true);
-            $key_b = get_post_meta($b->ID, "data", true) . get_post_meta($b->ID, "orario", true);
+            $key_a =
+                get_post_meta($a->ID, "data", true) .
+                get_post_meta($a->ID, "orario", true);
+            $key_b =
+                get_post_meta($b->ID, "data", true) .
+                get_post_meta($b->ID, "orario", true);
             return strcmp($key_a, $key_b);
         });
 
@@ -56,7 +59,10 @@ class Film extends \Timber\Post
 
         self::register_custom_fields();
 
-        add_action("save_post_film", [self::class, "sync_proiezioni_taxonomies"]);
+        add_action("save_post_film", [
+            self::class,
+            "sync_proiezioni_taxonomies",
+        ]);
 
         add_action("admin_head-post.php", [
             self::class,
@@ -71,14 +77,16 @@ class Film extends \Timber\Post
     public static function sync_proiezioni_taxonomies(int $post_id): void
     {
         $proiezioni = get_posts([
-            "post_type"   => "proiezione",
+            "post_type" => "proiezione",
             "numberposts" => -1,
-            "fields"      => "ids",
-            "meta_query"  => [[
-                "key"     => "film",
-                "value"   => '"' . $post_id . '"',
-                "compare" => "LIKE",
-            ]],
+            "fields" => "ids",
+            "meta_query" => [
+                [
+                    "key" => "film",
+                    "value" => '"' . $post_id . '"',
+                    "compare" => "LIKE",
+                ],
+            ],
         ]);
 
         foreach ($proiezioni as $proiezione_id) {
@@ -105,7 +113,23 @@ class Film extends \Timber\Post
             "fields" => [
                 Tab::make("Generali"),
                 Text::make("Regista", "regista"),
+                Repeater::make("Altri registi", "altri_registi")
+                    ->layout("row")
+                    ->key("field_film_altri_registi")
+                    ->collapsed("field_film_altri_registi_nome")
+                    ->fields([
+                        Text::make("Nome", "nome")->key(
+                            "field_film_altri_registi_nome",
+                        ),
+                    ]),
                 Text::make("Titolo alternativo", "titolo_alternativo"),
+                Repeater::make("Altri titoli alternativi", "altri_titoli_alternativi")
+                    ->layout("row")
+                    ->key("field_film_altri_titoli_alternativi")
+                    ->collapsed("field_film_altri_titoli_alternativi_titolo")
+                    ->fields([
+                        Text::make("Titolo", "titolo")->key("field_film_altri_titoli_alternativi_titolo"),
+                    ]),
                 Text::make("Durata", "durata"),
                 Number::make("Anno", "anno")
                     ->min(1888)
@@ -165,15 +189,25 @@ class Film extends \Timber\Post
                     ->filters(["search", "post_type"])
                     ->elements(["featured_image"])
                     ->maxPosts(3)
-                    ->helperText("Se impostato, questi contenuti (film o proiezioni) verranno mostrati come «Scopri anche» al posto dei suggerimenti automatici."),
+                    ->helperText(
+                        "Se impostato, questi contenuti (film o proiezioni) verranno mostrati come «Scopri anche» al posto dei suggerimenti automatici.",
+                    ),
 
                 Tab::make("Info aggiuntive"),
                 Repeater::make("Info aggiuntive", "info_aggiuntive")
                     ->key("field_film_info_aggiuntive_repeater")
-                    ->helperText("Le righe aggiunte qui appariranno nella tabella informativa della pagina del film, dopo i campi standard (regista, durata, paese, ecc.).")
+                    ->helperText(
+                        "Le righe aggiunte qui appariranno nella tabella informativa della pagina del film, dopo i campi standard (regista, durata, paese, ecc.).",
+                    )
                     ->fields([
-                        Text::make("Titolo", "titolo")->key("field_film_info_aggiuntive_titolo"),
-                        Textarea::make("Contenuto", "contenuto")->key("field_film_info_aggiuntive_contenuto")->rows(3),
+                        Text::make("Titolo", "titolo")->key(
+                            "field_film_info_aggiuntive_titolo",
+                        ),
+                        WYSIWYGEditor::make("Contenuto", "contenuto")
+                            ->key("field_film_info_aggiuntive_contenuto")
+                            ->toolbar(["bold", "italic", "link"])
+                            ->tabs("all")
+                            ->disableMediaUpload(),
                     ]),
             ],
         ]);

@@ -1,0 +1,7 @@
+.premi-swiper .swiper-wrapper {
+  align-items: stretch;
+}
+
+.premi-swiper .swiper-slide {
+  height: auto;
+}

@@ -35,6 +35,10 @@ class Website extends Site
         PostTypes\WhosComing::register();
         PostTypes\ContentsDoc::register();
         PostTypes\ContentsDrama::register();
+        PostTypes\ProgettiDoc::register();
+        PostTypes\ProgettiDrama::register();
+        PostTypes\AttivitaDoc::register();
+        PostTypes\AttivitaDrama::register();
     }
 
     #[Action("init")]
@@ -42,6 +46,8 @@ class Website extends Site
     {
         Taxonomies\FilmTaxonomies::register();
         Taxonomies\ProgettiTaxonomies::register();
+        Taxonomies\ProgettiDocTaxonomies::register();
+        Taxonomies\ProgettiDramaTaxonomies::register();
         Taxonomies\EventiTaxonomies::register();
         Taxonomies\WhosComingTaxonomies::register();
     }
@@ -187,7 +193,11 @@ class Website extends Site
             is_post_type_archive("contents-doc") ||
             is_singular("contents-doc") ||
             is_post_type_archive("contents-drama") ||
-            is_singular("contents-drama")
+            is_singular("contents-drama") ||
+            is_singular("progetti-doc") ||
+            is_singular("progetti-drama") ||
+            is_singular("attivita-doc") ||
+            is_singular("attivita-drama")
         ) {
             $section = "industry";
         }
@@ -428,6 +438,114 @@ class Website extends Site
                     "title" => get_the_title($post->ID),
                 ];
             } elseif (get_post_type($post->ID) === "contents-drama") {
+                $industry_page = get_page_by_path("industry");
+                $bio_to_bdrama_page = get_page_by_path("industry/bio-to-b-drama");
+                $breadcrumbs[] = [
+                    "url" => home_url("/"),
+                    "title" => "Biografilm",
+                ];
+                $breadcrumbs[] = [
+                    "url" => $industry_page
+                        ? get_permalink($industry_page)
+                        : home_url("/"),
+                    "title" => "Industry",
+                ];
+                $breadcrumbs[] = [
+                    "url" => $bio_to_bdrama_page
+                        ? get_permalink($bio_to_bdrama_page)
+                        : "",
+                    "title" => "Bio to B | Drama",
+                ];
+                $breadcrumbs[] = [
+                    "url" => get_post_type_archive_link("contents-drama"),
+                    "title" => "Contents",
+                ];
+                $breadcrumbs[] = [
+                    "url" => "",
+                    "title" => get_the_title($post->ID),
+                ];
+            } elseif (get_post_type($post->ID) === "progetti-doc") {
+                $industry_page = get_page_by_path("industry");
+                $bio_to_bdoc_page = get_page_by_path("industry/bio-to-b-doc");
+                $breadcrumbs[] = [
+                    "url" => home_url("/"),
+                    "title" => "Biografilm",
+                ];
+                $breadcrumbs[] = [
+                    "url" => $industry_page
+                        ? get_permalink($industry_page)
+                        : home_url("/"),
+                    "title" => "Industry",
+                ];
+                $breadcrumbs[] = [
+                    "url" => $bio_to_bdoc_page
+                        ? get_permalink($bio_to_bdoc_page)
+                        : "",
+                    "title" => "Bio to B | Doc",
+                ];
+                $breadcrumbs[] = [
+                    "url" => get_post_type_archive_link("contents-doc"),
+                    "title" => "Contents",
+                ];
+                $breadcrumbs[] = [
+                    "url" => "",
+                    "title" => get_the_title($post->ID),
+                ];
+            } elseif (get_post_type($post->ID) === "progetti-drama") {
+                $industry_page = get_page_by_path("industry");
+                $bio_to_bdrama_page = get_page_by_path("industry/bio-to-b-drama");
+                $breadcrumbs[] = [
+                    "url" => home_url("/"),
+                    "title" => "Biografilm",
+                ];
+                $breadcrumbs[] = [
+                    "url" => $industry_page
+                        ? get_permalink($industry_page)
+                        : home_url("/"),
+                    "title" => "Industry",
+                ];
+                $breadcrumbs[] = [
+                    "url" => $bio_to_bdrama_page
+                        ? get_permalink($bio_to_bdrama_page)
+                        : "",
+                    "title" => "Bio to B | Drama",
+                ];
+                $breadcrumbs[] = [
+                    "url" => get_post_type_archive_link("contents-drama"),
+                    "title" => "Contents",
+                ];
+                $breadcrumbs[] = [
+                    "url" => "",
+                    "title" => get_the_title($post->ID),
+                ];
+            } elseif (get_post_type($post->ID) === "attivita-doc") {
+                $industry_page = get_page_by_path("industry");
+                $bio_to_bdoc_page = get_page_by_path("industry/bio-to-b-doc");
+                $breadcrumbs[] = [
+                    "url" => home_url("/"),
+                    "title" => "Biografilm",
+                ];
+                $breadcrumbs[] = [
+                    "url" => $industry_page
+                        ? get_permalink($industry_page)
+                        : home_url("/"),
+                    "title" => "Industry",
+                ];
+                $breadcrumbs[] = [
+                    "url" => $bio_to_bdoc_page
+                        ? get_permalink($bio_to_bdoc_page)
+                        : "",
+                    "title" => "Bio to B | Doc",
+                ];
+                $breadcrumbs[] = [
+                    "url" => get_post_type_archive_link("contents-doc"),
+                    "title" => "Contents",
+                ];
+                $breadcrumbs[] = [
+                    "url" => "",
+                    "title" => get_the_title($post->ID),
+                ];
+            } elseif (get_post_type($post->ID) === "attivita-drama") {
                 $industry_page = get_page_by_path("industry");
                 $bio_to_bdrama_page = get_page_by_path("industry/bio-to-b-drama");
                 $breadcrumbs[] = [
@@ -806,6 +924,7 @@ class Website extends Site
         return $result;
     }
 
+
     /** Normalise an ACF relationship value to a flat array of integer post IDs. */
     private static function extract_post_ids(mixed $value): array
     {
@@ -838,6 +957,19 @@ class Website extends Site
             $pagenow != "wp-login.php"
         ) {
             wp_redirect(home_url("coming-soon"));
+            exit();
+        }
+    }
+
+    #[Action("template_redirect")]
+    public function redirect_attivita_archives()
+    {
+        if (is_post_type_archive("attivita-doc")) {
+            wp_redirect(get_post_type_archive_link("contents-doc"), 301);
+            exit();
+        }
+        if (is_post_type_archive("attivita-drama")) {
+            wp_redirect(get_post_type_archive_link("contents-drama"), 301);
             exit();
         }
     }

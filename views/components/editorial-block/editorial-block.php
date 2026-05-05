@@ -9,6 +9,9 @@ use Extended\ACF\Fields\Text;
 use Extended\ACF\Fields\WYSIWYGEditor;
 
 return [
+    Tab::make("Etichetta", "etichetta_tab"),
+    Text::make("Etichetta", "label"),
+
     Tab::make("Heading", "heading_tab"),
     Text::make("Heading", "heading"),
 
@@ -41,6 +44,12 @@ return [
         ]),
 
     Tab::make("Stile", "stile_tab"),
+    Select::make("Dimensione testo", "content_size")
+        ->choices([
+            "xl"   => "XL",
+            "base" => "Base",
+        ])
+        ->default("xl"),
     Select::make("Dimensione heading", "title_size")
         ->choices([
             "big" => "Grande uppercase",

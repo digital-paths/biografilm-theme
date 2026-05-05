@@ -2,9 +2,13 @@
 
 namespace App\PostTypes;
 
+use Extended\ACF\Fields\FlexibleContent;
 use Extended\ACF\Fields\Group;
 use Extended\ACF\Fields\Image;
+use Extended\ACF\Fields\Layout;
 use Extended\ACF\Fields\Link;
+use Extended\ACF\Fields\PostObject;
+use Extended\ACF\Fields\Relationship;
 use Extended\ACF\Fields\Repeater;
 use Extended\ACF\Fields\Select;
 use Extended\ACF\Fields\Tab;
@@ -37,6 +41,15 @@ class ContentsDrama extends \Timber\Post
     {
         $tabs_fields = require get_stylesheet_directory() .
             "/views/components/tabs/tabs.php";
+
+        $text_displayer_fields = require get_stylesheet_directory() .
+            "/views/components/text-displayer/text-displayer.php";
+
+        $editorial_block_fields = require get_stylesheet_directory() .
+            "/views/components/editorial-block/editorial-block.php";
+
+        $spacer_fields = require get_stylesheet_directory() .
+            "/views/components/spacer/spacer.php";
 
         register_extended_field_group([
             "title" => "Content Drama",
@@ -90,6 +103,114 @@ class ContentsDrama extends \Timber\Post
 
                         Tab::make("Tabs", "contenuti_tab"),
                         ...$tabs_fields,
+
+                        Tab::make("Extra", "extra_tab"),
+                        FlexibleContent::make("Extra", "extra")
+                            ->key("field_contents_drama_extra")
+                            ->button("Aggiungi sezione")
+                            ->layouts([
+                                Layout::make("Progetti", "progetti")
+                                    ->key("layout_contents_drama_extra_progetti")
+                                    ->fields([
+                                        Text::make("Titolo", "titolo")
+                                            ->key("field_contents_drama_extra_progetti_titolo"),
+                                        Text::make("Sottotitolo", "sottotitolo")
+                                            ->key("field_contents_drama_extra_progetti_sottotitolo"),
+                                        Relationship::make("Progetti", "items")
+                                            ->key("field_contents_drama_extra_progetti_items")
+                                            ->postTypes(["progetti-drama"])
+                                            ->filters(["search"])
+                                            ->elements(["featured_image"]),
+                                    ]),
+                                Layout::make("Who's Coming", "whos_coming")
+                                    ->key("layout_contents_drama_extra_whos_coming")
+                                    ->fields([
+                                        Text::make("Titolo", "titolo")
+                                            ->key("field_contents_drama_extra_whos_coming_titolo"),
+                                        Text::make("Sottotitolo", "sottotitolo")
+                                            ->key("field_contents_drama_extra_whos_coming_sottotitolo"),
+                                        Relationship::make("Who's Coming", "items")
+                                            ->key("field_contents_drama_extra_whos_coming_items")
+                                            ->postTypes(["whos-coming"])
+                                            ->filters(["search"])
+                                            ->elements(["featured_image"]),
+                                    ]),
+                                Layout::make("Selection", "selection")
+                                    ->key("layout_contents_drama_extra_selection")
+                                    ->fields([
+                                        Text::make("Titolo", "titolo")
+                                            ->key("field_contents_drama_extra_selection_titolo"),
+                                        Text::make("Sottotitolo", "sottotitolo")
+                                            ->key("field_contents_drama_extra_selection_sottotitolo"),
+                                        Repeater::make("Selezioni", "items")
+                                            ->key("field_contents_drama_extra_selection_items")
+                                            ->layout("block")
+                                            ->button("Aggiungi selezione")
+                                            ->fields([
+                                                Tab::make("Sinistra", "sinistra_tab"),
+                                                Image::make("Immagine", "immagine")
+                                                    ->key("field_contents_drama_extra_selection_item_immagine")
+                                                    ->format("array"),
+                                                Text::make("Titolo colonna", "titolo_colonna")
+                                                    ->key("field_contents_drama_extra_selection_item_titolo_colonna"),
+                                                WYSIWYGEditor::make("Descrizione", "descrizione")
+                                                    ->key("field_contents_drama_extra_selection_item_descrizione")
+                                                    ->toolbar(["bold", "italic", "link"])
+                                                    ->tabs("all")
+                                                    ->disableMediaUpload(),
+                                                Tab::make("Destra", "destra_tab"),
+                                                PostObject::make("Progetto", "progetto")
+                                                    ->key("field_contents_drama_extra_selection_item_progetto")
+                                                    ->postTypes(["progetti-drama"]),
+                                            ]),
+                                    ]),
+                                Layout::make("Attività", "attivita")
+                                    ->key("layout_contents_drama_extra_attivita")
+                                    ->fields([
+                                        Text::make("Titolo", "titolo")
+                                            ->key("field_contents_drama_extra_attivita_titolo"),
+                                        Text::make("Sottotitolo", "sottotitolo")
+                                            ->key("field_contents_drama_extra_attivita_sottotitolo"),
+                                        Relationship::make("Attività", "items")
+                                            ->key("field_contents_drama_extra_attivita_items")
+                                            ->postTypes(["attivita-doc", "attivita-drama"])
+                                            ->filters(["search"])
+                                            ->elements(["featured_image"]),
+                                    ]),
+                                Layout::make("Text Displayer", "text_displayer")
+                                    ->key("layout_contents_drama_extra_text_displayer")
+                                    ->fields($text_displayer_fields),
+                                Layout::make("Editorial Block", "editorial_block")
+                                    ->key("layout_contents_drama_extra_editorial_block")
+                                    ->fields($editorial_block_fields),
+                                Layout::make("Spacer", "spacer")
+                                    ->key("layout_contents_drama_extra_spacer")
+                                    ->fields($spacer_fields),
+                                Layout::make("Premi", "premi")
+                                    ->key("layout_contents_drama_extra_premi")
+                                    ->fields([
+                                        Text::make("Titolo", "titolo")
+                                            ->key("field_contents_drama_extra_premi_titolo"),
+                                        Text::make("Sottotitolo", "sottotitolo")
+                                            ->key("field_contents_drama_extra_premi_sottotitolo"),
+                                        Repeater::make("Premi", "items")
+                                            ->key("field_contents_drama_extra_premi_items")
+                                            ->layout("block")
+                                            ->button("Aggiungi premio")
+                                            ->fields([
+                                                Text::make("Titolo", "titolo")
+                                                    ->key("field_contents_drama_extra_premi_item_titolo"),
+                                                Link::make("Powered by", "powered_by")
+                                                    ->key("field_contents_drama_extra_premi_item_powered_by")
+                                                    ->format("array"),
+                                                WYSIWYGEditor::make("Contenuto", "contenuto")
+                                                    ->key("field_contents_drama_extra_premi_item_contenuto")
+                                                    ->toolbar(["bold", "italic", "link", "bullist", "numlist"])
+                                                    ->tabs("all")
+                                                    ->disableMediaUpload(),
+                                            ]),
+                                    ]),
+                            ]),
                     ]),
             ],
         ]);

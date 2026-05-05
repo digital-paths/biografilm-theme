@@ -21,6 +21,20 @@
   %}
   {% set description = function("get_field", "description", film_id) %}
   {% set info_aggiuntive = function("get_field", "info_aggiuntive", film_id) %}
+  {% set altri_registi = function("get_field", "altri_registi", film_id) %}
+  {% set tutti_registi = regista ? [regista] : [] %}
+  {% if altri_registi %}
+    {% for r in altri_registi %}
+      {% set tutti_registi = tutti_registi|merge([r.nome]) %}
+    {% endfor %}
+  {% endif %}
+  {% set altri_titoli_alternativi = function("get_field", "altri_titoli_alternativi", film_id) %}
+  {% set tutti_titoli = titolo_alternativo ? [titolo_alternativo] : [] %}
+  {% if altri_titoli_alternativi %}
+    {% for t in altri_titoli_alternativi %}
+      {% set tutti_titoli = tutti_titoli|merge([t.titolo]) %}
+    {% endfor %}
+  {% endif %}
   {% set proiezioni = post.get_proiezioni %}
 
   {# Hero image #}
@@ -67,7 +81,7 @@
   {% endif %}
 
   <div
-    class="border-b-stroke 3xl:grid-cols-4 mx-auto grid grid-cols-3 border-b"
+    class="border-b-stroke 3xl:grid-cols-4 mx-auto grid grid-cols-3 border-b {{ not post.thumbnail ? 'mt-[108px]' : '' }}"
   >
     {# Main content — cols 1–2 #}
     <div
@@ -94,31 +108,31 @@
       <div
         class="grid grid-cols-[auto_1fr] lg:grid-cols-[minmax(auto,_220px)_1fr]"
       >
-        {% if regista %}
+        {% if tutti_registi %}
           <div class="contents">
             <span
               class="blur-in border-stroke text-tight border-b pr-8 pb-6 text-base lg:pr-16 lg:text-xl"
             >
-              Regista
+              {{ altri_registi ? "Registi" : "Regista" }}
             </span>
             <span
               class="blur-in border-stroke text-tight border-b pb-6 text-base font-semibold lg:text-xl"
             >
-              {{ regista }}
+              {{ tutti_registi|join(", ") }}
             </span>
           </div>
         {% endif %}
-        {% if titolo_alternativo %}
+        {% if tutti_titoli %}
           <div class="contents">
             <span
               class="blur-in border-stroke text-tight border-b py-6 pr-8 text-base lg:pr-16 lg:text-xl"
             >
-              Titolo alternativo
+              {{ altri_titoli_alternativi ? "Titoli alternativi" : "Titolo alternativo" }}
             </span>
             <span
               class="blur-in border-stroke text-tight border-b py-6 text-base font-semibold lg:text-xl"
             >
-              {{ titolo_alternativo }}
+              {{ tutti_titoli|join(", ") }}
             </span>
           </div>
         {% endif %}
@@ -213,11 +227,11 @@
               >
                 {{ row.titolo }}
               </span>
-              <span
-                class="border-stroke text-tight border-b py-6 text-base font-semibold lg:text-xl"
+              <div
+                class="prose border-stroke border-b py-6 text-base lg:text-xl"
               >
-                {{ row.contenuto }}
-              </span>
+                {{ row.contenuto|raw }}
+              </div>
             </div>
           {% endfor %}
         {% endif %}

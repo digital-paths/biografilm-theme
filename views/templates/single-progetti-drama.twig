@@ -1,0 +1,256 @@
+{% extends "base.twig" %}
+
+{% block hero %}
+
+{% endblock hero %}
+
+{% block content %}
+  {% set post_id = post.ID %}
+  {% set paese = function("wp_get_post_terms", post_id, "pdr-paese") %}
+  {% set genere = function("wp_get_post_terms", post_id, "pdr-genere")[0] %}
+  {% set badges = function("wp_get_post_terms", post_id, "pdr-badge") %}
+  {% set regista = function("get_field", "regista", post_id) %}
+  {% set titolo_alternativo =
+    function("get_field", "titolo_alternativo", post_id)
+  %}
+  {% set durata = function("get_field", "durata", post_id) %}
+  {% set anno = function("get_field", "anno", post_id) %}
+  {% set description = function("get_field", "description", post_id) %}
+  {% set info_aggiuntive = function("get_field", "info_aggiuntive", post_id) %}
+  {% set altri_registi = function("get_field", "altri_registi", post_id) %}
+  {% set tutti_registi = regista ? [regista] : [] %}
+  {% if altri_registi %}
+    {% for r in altri_registi %}
+      {% set tutti_registi = tutti_registi|merge([r.nome]) %}
+    {% endfor %}
+  {% endif %}
+  {% set altri_titoli_alternativi = function("get_field", "altri_titoli_alternativi", post_id) %}
+  {% set tutti_titoli = titolo_alternativo ? [titolo_alternativo] : [] %}
+  {% if altri_titoli_alternativi %}
+    {% for t in altri_titoli_alternativi %}
+      {% set tutti_titoli = tutti_titoli|merge([t.titolo]) %}
+    {% endfor %}
+  {% endif %}
+
+  {# Hero image #}
+  {% if post.thumbnail %}
+    {% set thumb_id = function("get_post_thumbnail_id", post_id) %}
+    {% set fp = thumb_id
+      ? function("get_post_meta", thumb_id, "focalpoint", true)
+      : null
+    %}
+    {% set fp_style = fp
+      ? "object-position: " ~ ((fp.left * 100)|round) ~ "% "
+        ~ ((fp.top * 100)|round)
+        ~ "%;"
+      : null
+    %}
+    <div
+      class="film-hero relative mt-[108px] h-[400px] w-full overflow-hidden lg:aspect-10/4 lg:h-auto"
+    >
+      <div
+        class="overlay-blur overlay absolute z-30 h-full w-full bg-transparent backdrop-blur-[50px]"
+      ></div>
+      <img
+        src="{{ post.thumbnail.src("full") }}"
+        alt="{{ post.title }}"
+        class="absolute inset-0 h-full w-full object-cover"
+        style="{{ fp_style }}"
+      />
+      {% if badges %}
+        <div class="absolute bottom-0 left-0 flex gap-0">
+          {% for badge in badges %}
+            <span
+              class="uppercase {{
+              loop.last
+                ? ""
+                : "border-r border-r-[#575757]"
+              }} bg-black/20 px-2 py-1 text-sm font-semibold text-white! backdrop-blur-[50px]"
+            >
+              {{ badge.name }}
+            </span>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <div
+    class="border-b-stroke 3xl:grid-cols-4 mx-auto grid grid-cols-3 border-b {{ not post.thumbnail ? 'mt-[108px]' : '' }}"
+  >
+    {# Main content — cols 1–2 #}
+    <div
+      class="3xl:col-span-3 col-span-3 flex flex-col gap-10 pt-20 pr-6 pb-20 pl-6 lg:gap-20 xl:col-span-2 xl:pr-10 xl:pb-30 2xl:pr-10 2xl:pr-30 2xl:pl-10"
+    >
+      {# Header #}
+      <div class="blur-in flex flex-col gap-6">
+        {{ include("parts/breadcrumbs.twig") }}
+        <h1 class="display-h1-tertiary blur-in">{{ post.title }}</h1>
+      </div>
+
+      {# Info table #}
+      <div
+        class="grid grid-cols-[auto_1fr] lg:grid-cols-[minmax(auto,_220px)_1fr]"
+      >
+        {% if tutti_registi %}
+          <div class="contents">
+            <span
+              class="blur-in border-stroke text-tight border-b pr-8 pb-6 text-base lg:pr-16 lg:text-xl"
+            >
+              {{ altri_registi ? "Registi" : "Regista" }}
+            </span>
+            <span
+              class="blur-in border-stroke text-tight border-b pb-6 text-base font-semibold lg:text-xl"
+            >
+              {{ tutti_registi|join(", ") }}
+            </span>
+          </div>
+        {% endif %}
+        {% if tutti_titoli %}
+          <div class="contents">
+            <span
+              class="blur-in border-stroke text-tight border-b py-6 pr-8 text-base lg:pr-16 lg:text-xl"
+            >
+              {{ altri_titoli_alternativi ? "Titoli alternativi" : "Titolo alternativo" }}
+            </span>
+            <span
+              class="blur-in border-stroke text-tight border-b py-6 text-base font-semibold lg:text-xl"
+            >
+              {{ tutti_titoli|join(", ") }}
+            </span>
+          </div>
+        {% endif %}
+        {% if durata %}
+          <div class="contents">
+            <span
+              class="blur-in border-stroke text-tight border-b py-6 pr-8 text-base lg:pr-16 lg:text-xl"
+            >
+              Durata
+            </span>
+            <span
+              class="blur-in border-stroke text-tight border-b py-6 text-base font-semibold lg:text-xl"
+            >
+              {{ durata }}
+            </span>
+          </div>
+        {% endif %}
+        {% if paese %}
+          <div class="contents">
+            <span
+              class="blur-in border-stroke text-tight border-b py-6 pr-8 text-base lg:pr-16 lg:text-xl"
+            >
+              Paese
+            </span>
+            <span
+              class="blur-in border-stroke text-tight border-b py-6 text-base font-semibold lg:text-xl"
+            >
+              {{ paese|map(t => t.name)|join(", ") }}
+            </span>
+          </div>
+        {% endif %}
+        {% if anno %}
+          <div class="contents">
+            <span
+              class="blur-in border-stroke text-tight border-b py-6 pr-8 text-base lg:pr-16 lg:text-xl"
+            >
+              Anno
+            </span>
+            <span
+              class="blur-in border-stroke text-tight border-b py-6 text-base font-semibold lg:text-xl"
+            >
+              {{ anno }}
+            </span>
+          </div>
+        {% endif %}
+        {% if genere %}
+          <div class="contents">
+            <span
+              class="blur-in border-stroke text-tight border-b py-6 pr-8 text-base lg:pr-16 lg:text-xl"
+            >
+              Genere
+            </span>
+            <span
+              class="blur-in border-stroke text-tight border-b py-6 text-base font-semibold lg:text-xl"
+            >
+              {{ genere.name }}
+            </span>
+          </div>
+        {% endif %}
+        {% if info_aggiuntive %}
+          {% for row in info_aggiuntive %}
+            <div class="blur-in contents">
+              <span
+                class="border-stroke text-tight border-b py-6 pr-8 text-base lg:pr-16 lg:text-xl"
+              >
+                {{ row.titolo }}
+              </span>
+              <div
+                class="prose border-stroke border-b py-6 text-base lg:text-xl"
+              >
+                {{ row.contenuto|raw }}
+              </div>
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+
+      {# Description #}
+      {% if description %}
+        <div
+          class="blur-in prose font-regular max-w-none text-base leading-[150%] text-black/80"
+        >
+          {{ description }}
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
+  {% set whos_coming_groups = function("get_field", "whos_coming", post_id) %}
+  {% if whos_coming_groups %}
+    {% for group in whos_coming_groups %}
+      {% if group.profili %}
+        {% set is_last_group = loop.last %}
+        {% set is_first_group = loop.first %}
+        <section class="w-full">
+          <div class="3xl:grid-cols-4 grid w-full grid-cols-3">
+            <div
+              class="3xl:col-span-1 col-span-3 flex flex-col gap-2 px-6 pt-20 pb-10 xl:col-span-1 xl:p-10! border-stroke border-b xl:border-b-0 {{ not is_first_group ? 'xl:border-t' : '' }}"
+            >
+              {% if group.titolo %}
+                <h2 class="heading-h4 blur-in font-semibold">{{ group.titolo }}</h2>
+              {% endif %}
+            </div>
+            <div
+              class="3xl:col-span-3 col-span-3 grid grid-cols-1 md:grid-cols-2 xl:col-span-2 3xl:grid-cols-3"
+            >
+              {% set count = group.profili|length %}
+              {% set is_odd = count % 2 == 1 %}
+              {% set remainder_3col = count % 3 %}
+              {% set filler_3col = remainder_3col > 0 ? 3 - remainder_3col : 0 %}
+              {% set filler_border = not is_last_group ? "border-b" : "" %}
+              {% for person in group.profili %}
+                {{
+                  include(
+                    "parts/cards/whos-coming-card.twig",
+                    {
+                      person: person,
+                      extra_class: ""
+                    }
+                  )
+                }}
+              {% endfor %}
+              {% if is_odd %}
+                <div class="border-stroke 3xl:hidden col-span-1 border-l {{ filler_border }}"></div>
+              {% endif %}
+              {% if filler_3col > 0 %}
+                {% for i in 1..filler_3col %}
+                  <div class="border-stroke hidden 3xl:block col-span-1 {{ loop.first ? 'border-l' : '' }} {{ filler_border }}"></div>
+                {% endfor %}
+              {% endif %}
+            </div>
+          </div>
+        </section>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+{% endblock content %}

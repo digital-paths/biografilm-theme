@@ -29,7 +29,7 @@
         <img
           src="{{ doc.icon.url }}"
           alt="{{ doc.icon.alt }}"
-          class="h-full w-auto object-contain"
+          class="h-full max-h-[180px] w-auto object-contain"
         />
       {% endif %}
     </div>
@@ -91,4 +91,185 @@
       </div>
     {% endif %}
   </div>
+{% endif %}
+
+{% if doc.extra %}
+  {% for row in doc.extra %}
+    {% set layout = row.acf_fc_layout %}
+    <section class="w-full">
+      {% if row.titolo or row.sottotitolo %}
+        <div
+          class="border-stroke flex flex-col border-b px-6 pt-20 pb-10 xl:px-10 xl:pt-30 xl:pb-20"
+        >
+          <div class="flex flex-col gap-6 xl:w-2/3">
+            {% if row.titolo %}
+              <h2 class="heading-h4 blur-in font-semibold">{{ row.titolo }}</h2>
+            {% endif %}
+            {% if row.sottotitolo %}
+              <p class="blur-in max-w-pros text-xl text-black/80">
+                {{ row.sottotitolo }}
+              </p>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+
+      {% if layout == "attivita" %}
+        {% if row.items %}
+          {% set count = row.items|length %}
+          {% set remainder_3col = count % 3 %}
+          {% set filler_3col = remainder_3col > 0 ? 3 - remainder_3col : 0 %}
+          {% set remainder_4col = count % 4 %}
+          {% set filler_4col = remainder_4col > 0 ? 4 - remainder_4col : 0 %}
+          {% set is_odd = count % 2 == 1 %}
+          <div
+            class="3xl:grid-cols-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3"
+          >
+            {% for item in row.items %}
+              {{ include("parts/cards/attivita-card.twig") }}
+            {% endfor %}
+            {% if is_odd %}
+              <div
+                class="border-stroke col-span-1 border-b border-l xl:hidden"
+              ></div>
+            {% endif %}
+            {% if filler_3col > 0 %}
+              {% for i in 1..filler_3col %}
+                <div
+                  class="border-stroke 3xl:hidden col-span-1 hidden border-b xl:block {{
+                  loop.first
+                    ? "border-l"
+                    : ""
+                  }}"
+                ></div>
+              {% endfor %}
+            {% endif %}
+            {% if filler_4col > 0 %}
+              {% for i in 1..filler_4col %}
+                <div
+                  class="border-stroke 3xl:block col-span-1 hidden border-b {{
+                  loop.first
+                    ? "border-l"
+                    : ""
+                  }}"
+                ></div>
+              {% endfor %}
+            {% endif %}
+          </div>
+        {% endif %}
+      {% elseif layout == "text_displayer" %}
+        {{
+          include(
+            "components/text-displayer/text-displayer.twig",
+            { component: row }
+          )
+        }}
+      {% elseif layout == "editorial_block" %}
+        {{
+          include(
+            "components/editorial-block/editorial-block.twig",
+            { component: row }
+          )
+        }}
+      {% elseif layout == "spacer" %}
+        {{ include("components/spacer/spacer.twig", { component: row }) }}
+      {% elseif layout == "premi" %}
+        {% if row.items %}
+          {{ include("components/premi/premi.twig", { items: row.items }) }}
+        {% endif %}
+      {% elseif layout == "selection" %}
+        {% for sel in row.items %}
+          {% if sel.progetto %}
+            <div class="border-stroke grid grid-cols-1 border-b xl:grid-cols-3">
+              <div class="col-span-1 flex flex-col xl:col-span-2">
+                {% if sel.immagine %}
+                  <div
+                    class="aspect-3/4 w-full overflow-hidden lg:aspect-[2/1]"
+                  >
+                    <img
+                      src="{{ sel.immagine.url }}"
+                      alt="{{ sel.immagine.alt }}"
+                      class="h-full w-full object-cover"
+                    />
+                  </div>
+                {% endif %}
+                {% if sel.titolo_colonna or sel.descrizione %}
+                  <div
+                    class="border-stroke flex flex-col gap-6 border-b px-6 py-10 xl:border-r xl:border-b-0 xl:px-10"
+                  >
+                    {% if sel.titolo_colonna %}
+                      <h3 class="heading-h6 font-semibold">
+                        {{ sel.titolo_colonna }}
+                      </h3>
+                    {% endif %}
+                    {% if sel.descrizione %}
+                      <div class="text-xl text-black/80">
+                        {{ sel.descrizione|raw }}
+                      </div>
+                    {% endif %}
+                  </div>
+                {% endif %}
+              </div>
+              <div class="col-span-1 flex flex-col">
+                {{
+                  include(
+                    "parts/cards/progetti-card.twig",
+                    {
+                      project: sel.progetto,
+                      extra_class: "h-full",
+                      no_border: true,
+                      inner_class: ""
+                    }
+                  )
+                }}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% else %}
+        {% set items = row.items %}
+        {% if items %}
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
+            {% set count = items|length %}
+            {% set remainder_4col = count % 4 %}
+            {% set filler_4col = remainder_4col > 0 ? 4 - remainder_4col : 0 %}
+            {% set is_odd = count % 2 == 1 %}
+            {% for item in items %}
+              {% if layout == "whos_coming" %}
+                {{
+                  include(
+                    "parts/cards/whos-coming-card.twig",
+                    { person: item, extra_class: "" }
+                  )
+                }}
+              {% else %}
+                {{
+                  include(
+                    "parts/cards/progetti-card.twig",
+                    { project: item, extra_class: "" }
+                  )
+                }}
+              {% endif %}
+            {% endfor %}
+            {% if is_odd %}
+              <div
+                class="border-stroke col-span-1 border-b border-l xl:hidden"
+              ></div>
+            {% endif %}
+            {% if filler_4col > 0 %}
+              {% for i in 1..filler_4col %}
+                <div
+                  class="border-stroke col-span-1 hidden border-b xl:block {{
+                  loop.first
+                    ? "border-l"
+                    : ""
+                  }}"
+                ></div>
+              {% endfor %}
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endif %}
+    </section>
+  {% endfor %}
 {% endif %}

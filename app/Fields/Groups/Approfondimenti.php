@@ -2,11 +2,14 @@
 
 namespace App\Fields\Groups;
 
+use Extended\ACF\Fields\File;
 use Extended\ACF\Fields\FlexibleContent;
 use Extended\ACF\Fields\Gallery;
 use Extended\ACF\Fields\Layout;
 use Extended\ACF\Fields\Link;
+use Extended\ACF\Fields\Oembed;
 use Extended\ACF\Fields\Repeater;
+use Extended\ACF\Fields\Select;
 use Extended\ACF\Fields\Text;
 use Extended\ACF\Fields\WYSIWYGEditor;
 use Extended\ACF\Location;
@@ -18,6 +21,8 @@ register_extended_field_group([
         Location::where("post_type", "news"),
         Location::where("post_type", "partner"),
         Location::where("post_type", "ospitalita"),
+        Location::where("post_type", "attivita-doc"),
+        Location::where("post_type", "attivita-drama"),
     ],
     "fields"   => [
         FlexibleContent::make("Approfondimenti", "approfondimenti")
@@ -40,6 +45,13 @@ register_extended_field_group([
                             ->button("Aggiungi link")
                             ->fields([
                                 Link::make("Link", "link")->format("array"),
+                                Select::make("Stile", "stile")
+                                    ->choices([
+                                        "primary"   => "Bottone primario",
+                                        "secondary" => "Bottone secondario",
+                                        "link"      => "Link",
+                                    ])
+                                    ->default("primary"),
                             ]),
                     ]),
                 Layout::make("Accordion", "accordion")
@@ -61,6 +73,14 @@ register_extended_field_group([
                     ->layout("block")
                     ->fields([
                         Gallery::make("Immagini", "images")->format("array"),
+                    ]),
+                Layout::make("Video", "video")
+                    ->layout("block")
+                    ->fields([
+                        Oembed::make("URL video", "url")
+                            ->helperText("YouTube, Vimeo o qualsiasi URL compatibile con oEmbed."),
+                        File::make("File video", "file")
+                            ->format("array"),
                     ]),
             ]),
     ],

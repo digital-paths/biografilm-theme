@@ -5,9 +5,12 @@
     <div class="flex flex-col gap-6 xl:w-2/3">
       {{ include("parts/breadcrumbs.twig") }}
       <h1 class="display-h1-news">{{ post.title }}</h1>
-      <p class="text-tight text-sm text-black">
-        {{ post.post_date|date("d F Y") }}
-      </p>
+      {% set doc = function("get_field", "attivita_doc", post.ID) %}
+      {% if doc.sottotitolo %}
+        <p class="text-sm">
+          {{ doc.sottotitolo }}
+        </p>
+      {% endif %}
     </div>
   </div>
 {% endblock hero %}
@@ -46,20 +49,4 @@
       {{ include("parts/approfondimenti.twig") }}
     </div>
   </article>
-
-  {% if related_news %}
-    {{
-      include(
-        "components/card-displayer/card-displayer.twig",
-        {
-          component: {
-            title: "Leggi anche",
-            title_class: "heading-h4 font-semibold",
-            items: related_news,
-            always_even: true
-          }
-        }
-      )
-    }}
-  {% endif %}
 {% endblock content %}
