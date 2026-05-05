@@ -225,7 +225,7 @@
 }
 
 .facetwp-radio.checked {
-  @apply relative z-10 bg-white text-black;
+  @apply relative z-10 bg-white text-black font-semibold;
 }
 
 .filters-black .facetwp-radio.checked {

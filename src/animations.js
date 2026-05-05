@@ -113,6 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .forEach((st) => st.kill());
 
     gsap.utils.toArray("[data-sticky-hour]").forEach((el) => {
+      if (!el.offsetParent) return; // skip elements inside display:none sections
       const row = el.parentElement.parentElement; // column → flex row
       ScrollTrigger.create({
         id: "hour-label",
@@ -135,6 +136,12 @@ document.addEventListener("DOMContentLoaded", () => {
     ScrollTrigger.refresh();
     pinHourLabels();
     initBlurEffects();
+  });
+
+  // Re-pin when the doc-program day tab changes (hidden sections have no dimensions at load time)
+  window.addEventListener("doc-day-changed", () => {
+    ScrollTrigger.refresh();
+    pinHourLabels();
   });
 
   function initBlurEffects() {

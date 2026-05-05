@@ -1,10 +1,104 @@
 {% extends "base.twig" %}
 
 {% block content %}
-  {% if tipo == "doc" or tipo == "drama" %}
-    {% include "parts/archive-contents.twig" with {
-      xl_cols: tipo == "drama" ? 3 : 4
-    } %}
+  {% if tipo == "doc" %}
+    {% if giorni %}
+      <div x-data="{ activeDay: 0 }" x-effect="$nextTick(() => window.dispatchEvent(new CustomEvent('doc-day-changed')))">
+        <div id="filters-sentinel" class="h-0"></div>
+        <div data-sticky-top class="top-0 z-50">
+          <div class="filters-black flex w-full overflow-x-auto bg-black">
+            <div class="facetwp-type-radio">
+              {% for giorno in giorni %}
+                <button
+                  type="button"
+                  class="facetwp-radio {{ loop.first ? "checked" : "" }}"
+                  :class="{ 'checked': activeDay === {{ loop.index0 }} }"
+                  @click="activeDay = {{ loop.index0 }}"
+                >
+                  {{ giorno.giorno|it_day }}
+                </button>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        {% for giorno in giorni %}
+          <section x-show="activeDay === {{ loop.index0 }}" x-cloak>
+            <h2 class="display-h3 p-6 xl:p-10">
+              {{ giorno.giorno|it_day_full }}
+            </h2>
+            {% if giorno.eventi %}
+              {# Collect unique hours #}
+              {% set hours = [] %}
+              {% for evento in giorno.eventi %}
+                {% set h = evento.orario|split(":")[0] %}
+                {% if h not in hours %}{% set hours =
+                  hours|merge([h])
+                %}{% endif %}
+              {% endfor %}
+              <div class="w-full">
+                {% for hour in hours %}
+                  <div
+                    class="flex {{
+                    loop.first
+                      ? "border-t border-t-stroke"
+                      : ""
+                    }}"
+                  >
+                    <div
+                      class="border-r-stroke border-b-stroke w-20 shrink-0 border-r border-b lg:w-30"
+                    >
+                      <div
+                        data-sticky-hour
+                        class="w-full pt-10 pb-10 text-center"
+                      >
+                        <h3 class="display-h6">{{ hour }}:00</h3>
+                      </div>
+                    </div>
+                    <div
+                      class="border-b-stroke divide-stroke min-w-0 flex-1 divide-y border-b"
+                    >
+                      {% for evento in giorno.eventi %}
+                        {% if evento.orario|split(":")[0] == hour %}
+                          <div
+                            class="flex min-h-60 flex-col justify-between gap-10 px-6 py-6 xl:px-10"
+                          >
+                            <div class="flex flex-col gap-3">
+                              <span class="text-tight text-2xl font-semibold">
+                                {{ evento.titolo }}
+                              </span>
+                              {% if evento.descrizione %}
+                                <div
+                                  class="text-tight prose [&_a]:text-red [&_a]:hover:text-red-hover [&_a]:active:text-red-active text-base! leading-[135%]! text-black! [&_a]:font-semibold [&_a]:underline [&_a]:underline-offset-3"
+                                >
+                                  {{ evento.descrizione|raw }}
+                                </div>
+                              {% endif %}
+                            </div>
+                            <p
+                              class="text-tight mt-1 text-base font-semibold text-black"
+                            >
+                              {{ giorno.giorno|it_date_long }} · {{
+                                evento.orario
+                              }}
+                              {% if evento.location %}
+                                <a href="{{ evento.location.url }}" target="{{ evento.location.target ?: '_self' }}" rel="noopener" class="link-underline ml-6 [--link-underline-height:1px]">{{ evento.location.title }}</a>
+                              {% elseif evento.location_text %}
+                                <span class="ml-6">{{ evento.location_text }}</span>
+                              {% endif %}
+                            </p>
+                          </div>
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </section>
+        {% endfor %}
+      </div>
+    {% endif %}
   {% else %}
     <div
       x-data="{ desktopFiltersOpen: false, drawerOpen: false }"
@@ -48,7 +142,9 @@
               @click="desktopFiltersOpen = !desktopFiltersOpen"
             >
               FILTRI
-              <span class="filters-active-dot bg-red hidden size-2 rounded-full">
+              <span
+                class="filters-active-dot bg-red hidden size-2 rounded-full"
+              >
 
               </span>
               {{

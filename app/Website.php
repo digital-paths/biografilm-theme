@@ -45,6 +45,23 @@ class Website extends Site
     }
 
     #[Action("init")]
+    public function register_page_rewrite_rules()
+    {
+        // Deep page URLs intercepted by CPT rewrite rules need top-priority rules
+        $pages = [
+            'industry/bio-to-b-doc/programma-doc',
+            'industry/bio-to-b-drama/programma-drama',
+        ];
+        foreach ($pages as $path) {
+            add_rewrite_rule(
+                '^' . $path . '/?$',
+                'index.php?pagename=' . $path,
+                'top'
+            );
+        }
+    }
+
+    #[Action("init")]
     public function register_taxonomies()
     {
         Taxonomies\FilmTaxonomies::register();
@@ -928,6 +945,28 @@ class Website extends Site
         $twig->addFilter(
             new \Twig\TwigFilter("ray", function (...$params) {
                 ray(...$params);
+            }),
+        );
+        $twig->addFilter(
+            new \Twig\TwigFilter("it_day", function (string $date): string {
+                $it_days = ['DOM', 'LUN', 'MAR', 'MER', 'GIO', 'VEN', 'SAB'];
+                $ts  = strtotime($date);
+                return $it_days[(int) date('w', $ts)] . ' ' . date('j', $ts);
+            }),
+        );
+        $twig->addFilter(
+            new \Twig\TwigFilter("it_date_long", function (string $date): string {
+                $it_months = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+                $ts = strtotime($date);
+                return date('j', $ts) . ' ' . $it_months[(int) date('n', $ts) - 1] . ' ' . date('Y', $ts);
+            }),
+        );
+        $twig->addFilter(
+            new \Twig\TwigFilter("it_day_full", function (string $date): string {
+                $it_days   = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
+                $it_months = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+                $ts = strtotime($date);
+                return $it_days[(int) date('w', $ts)] . ' ' . date('j', $ts) . ' ' . $it_months[(int) date('n', $ts) - 1];
             }),
         );
         $twig->addFunction(
