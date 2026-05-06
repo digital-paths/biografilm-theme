@@ -35,7 +35,7 @@
     {% if location.link %}
       <div class="flex items-center justify-between gap-2">
         <p class="text-tight blur-in text-base text-black font-semibold">
-          {{ location.link.title ?: "Scopri di più" }}
+          {{ location.link.title ?: function("pll__", "Scopri di più") }}
         </p>
         <span class="blur-in relative block h-6 w-6 overflow-hidden">
           <span

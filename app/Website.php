@@ -49,14 +49,14 @@ class Website extends Site
     {
         // Deep page URLs intercepted by CPT rewrite rules need top-priority rules
         $pages = [
-            'industry/bio-to-b-doc/programma-doc',
-            'industry/bio-to-b-drama/programma-drama',
+            "industry/bio-to-b-doc/programma-doc",
+            "industry/bio-to-b-drama/programma-drama",
         ];
         foreach ($pages as $path) {
             add_rewrite_rule(
-                '^' . $path . '/?$',
-                'index.php?pagename=' . $path,
-                'top'
+                "^" . $path . '/?$',
+                "index.php?pagename=" . $path,
+                "top",
             );
         }
     }
@@ -71,6 +71,18 @@ class Website extends Site
         Taxonomies\ProposteEditorialiTaxonomies::register();
         Taxonomies\EventiTaxonomies::register();
         Taxonomies\WhosComingTaxonomies::register();
+    }
+
+    #[Action("init")]
+    public function register_polylang_strings()
+    {
+        Translations::register();
+    }
+
+    #[Action("init", priority: 20)]
+    public function inject_polylang_translations()
+    {
+        Translations::inject();
     }
 
     #[Action("wp_enqueue_scripts")]
@@ -170,10 +182,13 @@ class Website extends Site
             $context["menus"][$location] = $menu;
         }
 
-        $context["menu_festival"] = Timber::get_menu("festival-it");
-        $context["menu_industry"] = Timber::get_menu("industry-it");
-        $context["menu_campus"] = Timber::get_menu("campus-it");
-        $context["menu_submenu"] = Timber::get_menu("submenu-it");
+        $lang = function_exists("pll_current_language")
+            ? pll_current_language()
+            : "it";
+        $context["menu_festival"] = Timber::get_menu("festival-{$lang}");
+        $context["menu_industry"] = Timber::get_menu("industry-{$lang}");
+        $context["menu_campus"] = Timber::get_menu("campus-{$lang}");
+        $context["menu_submenu"] = Timber::get_menu("submenu-{$lang}");
         $context["current_url"] = URLHelper::get_current_url();
         $context["header_show_date_location"] = get_field(
             "header_show_date_location",
@@ -190,6 +205,10 @@ class Website extends Site
         );
         $context["mapbox_token"] = get_field("mapbox_api_key", "option");
         $context["environment"] = $this->vite->environment;
+
+        if (function_exists("pll_the_languages")) {
+            $context["languages"] = pll_the_languages(["raw" => 1]);
+        }
 
         // Detect current section (festival = homepage, industry, campus)
         $section = "festival";
@@ -233,10 +252,20 @@ class Website extends Site
         $breadcrumbs = [];
         if (is_post_type_archive("sezione")) {
             $breadcrumbs[] = ["url" => home_url("/"), "title" => "Festival"];
-            $breadcrumbs[] = ["url" => "", "title" => "Sezioni"];
+            $breadcrumbs[] = [
+                "url" => "",
+                "title" => function_exists("pll__")
+                    ? pll__("Sezioni")
+                    : "Sezioni",
+            ];
         } elseif (is_post_type_archive("film")) {
             $breadcrumbs[] = ["url" => home_url("/"), "title" => "Festival"];
-            $breadcrumbs[] = ["url" => "", "title" => "Tutti i film"];
+            $breadcrumbs[] = [
+                "url" => "",
+                "title" => function_exists("pll__")
+                    ? pll__("Tutti i film")
+                    : "Tutti i film",
+            ];
         } elseif (is_post_type_archive("news")) {
             $breadcrumbs[] = ["url" => home_url("/"), "title" => "Biografilm"];
             $breadcrumbs[] = ["url" => "", "title" => "News"];
@@ -331,24 +360,52 @@ class Website extends Site
             $breadcrumbs[] = ["url" => "", "title" => "Publishers"];
         } elseif (is_post_type_archive("evento")) {
             $campus_page = get_page_by_path("campus");
-            $breadcrumbs[] = ["url" => home_url("/"), "title" => "Biografilm"];
+            if ($campus_page && function_exists("pll_get_post")) {
+                $translated = pll_get_post($campus_page->ID);
+                if ($translated) {
+                    $campus_page = get_post($translated);
+                }
+            }
+            $crumb_home = function_exists("pll_home_url")
+                ? pll_home_url()
+                : home_url("/");
+            $breadcrumbs[] = ["url" => $crumb_home, "title" => "Biografilm"];
             $breadcrumbs[] = [
                 "url" => $campus_page
                     ? get_permalink($campus_page)
-                    : home_url("/"),
+                    : $crumb_home,
                 "title" => "Campus",
             ];
-            $breadcrumbs[] = ["url" => "", "title" => "Eventi"];
+            $breadcrumbs[] = [
+                "url" => "",
+                "title" => function_exists("pll__")
+                    ? pll__("eventi")
+                    : "Events",
+            ];
         } elseif (is_post_type_archive("progetto")) {
             $campus_page = get_page_by_path("campus");
-            $breadcrumbs[] = ["url" => home_url("/"), "title" => "Biografilm"];
+            if ($campus_page && function_exists("pll_get_post")) {
+                $translated = pll_get_post($campus_page->ID);
+                if ($translated) {
+                    $campus_page = get_post($translated);
+                }
+            }
+            $crumb_home = function_exists("pll_home_url")
+                ? pll_home_url()
+                : home_url("/");
+            $breadcrumbs[] = ["url" => $crumb_home, "title" => "Biografilm"];
             $breadcrumbs[] = [
                 "url" => $campus_page
                     ? get_permalink($campus_page)
-                    : home_url("/"),
+                    : $crumb_home,
                 "title" => "Campus",
             ];
-            $breadcrumbs[] = ["url" => "", "title" => "Progetti e formazione"];
+            $breadcrumbs[] = [
+                "url" => "",
+                "title" => function_exists("pll__")
+                    ? pll__("Progetti e formazione")
+                    : "Projects and education",
+            ];
         } elseif ($post && !is_front_page()) {
             if (get_post_type($post->ID) === "news") {
                 $breadcrumbs[] = [
@@ -365,9 +422,12 @@ class Website extends Site
                 ];
             } elseif (get_post_type($post->ID) === "producers") {
                 $industry_page = get_page_by_path("industry");
-                $bio_to_bdrama_page = get_page_by_path("industry/bio-to-b-drama");
-                $producers_page = get_page_by_path("industry/bio-to-b-drama/producers")
-                    ?: get_page_by_path("producers");
+                $bio_to_bdrama_page = get_page_by_path(
+                    "industry/bio-to-b-drama",
+                );
+                $producers_page =
+                    get_page_by_path("industry/bio-to-b-drama/producers") ?:
+                    get_page_by_path("producers");
                 $breadcrumbs[] = [
                     "url" => home_url("/"),
                     "title" => "Biografilm",
@@ -400,9 +460,12 @@ class Website extends Site
                 ];
             } elseif (get_post_type($post->ID) === "publishers") {
                 $industry_page = get_page_by_path("industry");
-                $bio_to_bdrama_page = get_page_by_path("industry/bio-to-b-drama");
-                $publishers_page = get_page_by_path("industry/bio-to-b-drama/publishers")
-                    ?: get_page_by_path("publishers");
+                $bio_to_bdrama_page = get_page_by_path(
+                    "industry/bio-to-b-drama",
+                );
+                $publishers_page =
+                    get_page_by_path("industry/bio-to-b-drama/publishers") ?:
+                    get_page_by_path("publishers");
                 $breadcrumbs[] = [
                     "url" => home_url("/"),
                     "title" => "Biografilm",
@@ -440,7 +503,9 @@ class Website extends Site
                 ];
                 $breadcrumbs[] = [
                     "url" => get_post_type_archive_link("film"),
-                    "title" => "Tutti i film",
+                    "title" => function_exists("pll__")
+                        ? pll__("Tutti i film")
+                        : "Tutti i film",
                 ];
                 $breadcrumbs[] = [
                     "url" => "",
@@ -453,7 +518,9 @@ class Website extends Site
                 ];
                 $breadcrumbs[] = [
                     "url" => get_post_type_archive_link("sezione"),
-                    "title" => "Sezioni",
+                    "title" => function_exists("pll__")
+                        ? pll__("Sezioni")
+                        : "Sezioni",
                 ];
                 $breadcrumbs[] = [
                     "url" => "",
@@ -490,19 +557,30 @@ class Website extends Site
                 ];
             } elseif (get_post_type($post->ID) === "evento") {
                 $campus_page = get_page_by_path("campus");
+                if ($campus_page && function_exists("pll_get_post")) {
+                    $translated = pll_get_post($campus_page->ID);
+                    if ($translated) {
+                        $campus_page = get_post($translated);
+                    }
+                }
+                $crumb_home = function_exists("pll_home_url")
+                    ? pll_home_url()
+                    : home_url("/");
                 $breadcrumbs[] = [
-                    "url" => home_url("/"),
+                    "url" => $crumb_home,
                     "title" => "Biografilm",
                 ];
                 $breadcrumbs[] = [
                     "url" => $campus_page
                         ? get_permalink($campus_page)
-                        : home_url("/"),
+                        : $crumb_home,
                     "title" => "Campus",
                 ];
                 $breadcrumbs[] = [
                     "url" => get_post_type_archive_link("evento"),
-                    "title" => "Eventi",
+                    "title" => function_exists("pll__")
+                        ? pll__("eventi")
+                        : "Events",
                 ];
                 $breadcrumbs[] = [
                     "url" => "",
@@ -510,19 +588,30 @@ class Website extends Site
                 ];
             } elseif (get_post_type($post->ID) === "progetto") {
                 $campus_page = get_page_by_path("campus");
+                if ($campus_page && function_exists("pll_get_post")) {
+                    $translated = pll_get_post($campus_page->ID);
+                    if ($translated) {
+                        $campus_page = get_post($translated);
+                    }
+                }
+                $crumb_home = function_exists("pll_home_url")
+                    ? pll_home_url()
+                    : home_url("/");
                 $breadcrumbs[] = [
-                    "url" => home_url("/"),
+                    "url" => $crumb_home,
                     "title" => "Biografilm",
                 ];
                 $breadcrumbs[] = [
                     "url" => $campus_page
                         ? get_permalink($campus_page)
-                        : home_url("/"),
+                        : $crumb_home,
                     "title" => "Campus",
                 ];
                 $breadcrumbs[] = [
                     "url" => get_post_type_archive_link("progetto"),
-                    "title" => "Progetti e formazione",
+                    "title" => function_exists("pll__")
+                        ? pll__("Progetti e formazione")
+                        : "Projects and education",
                 ];
                 $breadcrumbs[] = [
                     "url" => "",
@@ -577,7 +666,9 @@ class Website extends Site
                 ];
             } elseif (get_post_type($post->ID) === "contents-drama") {
                 $industry_page = get_page_by_path("industry");
-                $bio_to_bdrama_page = get_page_by_path("industry/bio-to-b-drama");
+                $bio_to_bdrama_page = get_page_by_path(
+                    "industry/bio-to-b-drama",
+                );
                 $breadcrumbs[] = [
                     "url" => home_url("/"),
                     "title" => "Biografilm",
@@ -631,7 +722,9 @@ class Website extends Site
                 ];
             } elseif (get_post_type($post->ID) === "progetti-drama") {
                 $industry_page = get_page_by_path("industry");
-                $bio_to_bdrama_page = get_page_by_path("industry/bio-to-b-drama");
+                $bio_to_bdrama_page = get_page_by_path(
+                    "industry/bio-to-b-drama",
+                );
                 $breadcrumbs[] = [
                     "url" => home_url("/"),
                     "title" => "Biografilm",
@@ -685,7 +778,9 @@ class Website extends Site
                 ];
             } elseif (get_post_type($post->ID) === "attivita-drama") {
                 $industry_page = get_page_by_path("industry");
-                $bio_to_bdrama_page = get_page_by_path("industry/bio-to-b-drama");
+                $bio_to_bdrama_page = get_page_by_path(
+                    "industry/bio-to-b-drama",
+                );
                 $breadcrumbs[] = [
                     "url" => home_url("/"),
                     "title" => "Biografilm",
@@ -712,9 +807,12 @@ class Website extends Site
                 ];
             } elseif (get_post_type($post->ID) === "proposte-editoriali") {
                 $industry_page = get_page_by_path("industry");
-                $bio_to_bdrama_page = get_page_by_path("industry/bio-to-b-drama");
-                $publishers_page = get_page_by_path("industry/bio-to-b-drama/publishers")
-                    ?: get_page_by_path("publishers");
+                $bio_to_bdrama_page = get_page_by_path(
+                    "industry/bio-to-b-drama",
+                );
+                $publishers_page =
+                    get_page_by_path("industry/bio-to-b-drama/publishers") ?:
+                    get_page_by_path("publishers");
                 $editore = get_field("editore", $post->ID);
                 $breadcrumbs[] = [
                     "url" => home_url("/"),
@@ -862,8 +960,26 @@ class Website extends Site
 
         $industry_page = get_page_by_path("industry");
         $campus_page = get_page_by_path("campus");
+        if (function_exists("pll_get_post")) {
+            if ($industry_page) {
+                $translated = pll_get_post($industry_page->ID);
+                if ($translated) {
+                    $industry_page = get_post($translated);
+                }
+            }
+            if ($campus_page) {
+                $translated = pll_get_post($campus_page->ID);
+                if ($translated) {
+                    $campus_page = get_post($translated);
+                }
+            }
+        }
+        $home_url = function_exists("pll_home_url")
+            ? pll_home_url()
+            : home_url("/");
+        $context["home_url"] = $home_url;
         $context["nav_urls"] = [
-            "festival" => home_url("/"),
+            "festival" => $home_url,
             "industry" => $industry_page
                 ? get_permalink($industry_page->ID)
                 : home_url("/industry/"),
@@ -949,24 +1065,126 @@ class Website extends Site
         );
         $twig->addFilter(
             new \Twig\TwigFilter("it_day", function (string $date): string {
-                $it_days = ['DOM', 'LUN', 'MAR', 'MER', 'GIO', 'VEN', 'SAB'];
-                $ts  = strtotime($date);
-                return $it_days[(int) date('w', $ts)] . ' ' . date('j', $ts);
+                $ts = strtotime($date);
+                $lang = function_exists("pll_current_language")
+                    ? pll_current_language()
+                    : "it";
+                if ($lang === "en") {
+                    $days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+                } else {
+                    $days = ["DOM", "LUN", "MAR", "MER", "GIO", "VEN", "SAB"];
+                }
+                return $days[(int) date("w", $ts)] . " " . date("j", $ts);
             }),
         );
         $twig->addFilter(
-            new \Twig\TwigFilter("it_date_long", function (string $date): string {
-                $it_months = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+            new \Twig\TwigFilter("it_date_long", function (
+                string $date,
+            ): string {
                 $ts = strtotime($date);
-                return date('j', $ts) . ' ' . $it_months[(int) date('n', $ts) - 1] . ' ' . date('Y', $ts);
+                $lang = function_exists("pll_current_language")
+                    ? pll_current_language()
+                    : "it";
+                if ($lang === "en") {
+                    $months = [
+                        "January",
+                        "February",
+                        "March",
+                        "April",
+                        "May",
+                        "June",
+                        "July",
+                        "August",
+                        "September",
+                        "October",
+                        "November",
+                        "December",
+                    ];
+                } else {
+                    $months = [
+                        "Gennaio",
+                        "Febbraio",
+                        "Marzo",
+                        "Aprile",
+                        "Maggio",
+                        "Giugno",
+                        "Luglio",
+                        "Agosto",
+                        "Settembre",
+                        "Ottobre",
+                        "Novembre",
+                        "Dicembre",
+                    ];
+                }
+                return date("j", $ts) .
+                    " " .
+                    $months[(int) date("n", $ts) - 1] .
+                    " " .
+                    date("Y", $ts);
             }),
         );
         $twig->addFilter(
-            new \Twig\TwigFilter("it_day_full", function (string $date): string {
-                $it_days   = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
-                $it_months = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+            new \Twig\TwigFilter("it_day_full", function (
+                string $date,
+            ): string {
                 $ts = strtotime($date);
-                return $it_days[(int) date('w', $ts)] . ' ' . date('j', $ts) . ' ' . $it_months[(int) date('n', $ts) - 1];
+                $lang = function_exists("pll_current_language")
+                    ? pll_current_language()
+                    : "it";
+                if ($lang === "en") {
+                    $days = [
+                        "Sunday",
+                        "Monday",
+                        "Tuesday",
+                        "Wednesday",
+                        "Thursday",
+                        "Friday",
+                        "Saturday",
+                    ];
+                    $months = [
+                        "January",
+                        "February",
+                        "March",
+                        "April",
+                        "May",
+                        "June",
+                        "July",
+                        "August",
+                        "September",
+                        "October",
+                        "November",
+                        "December",
+                    ];
+                } else {
+                    $days = [
+                        "Domenica",
+                        "Lunedì",
+                        "Martedì",
+                        "Mercoledì",
+                        "Giovedì",
+                        "Venerdì",
+                        "Sabato",
+                    ];
+                    $months = [
+                        "Gennaio",
+                        "Febbraio",
+                        "Marzo",
+                        "Aprile",
+                        "Maggio",
+                        "Giugno",
+                        "Luglio",
+                        "Agosto",
+                        "Settembre",
+                        "Ottobre",
+                        "Novembre",
+                        "Dicembre",
+                    ];
+                }
+                return $days[(int) date("w", $ts)] .
+                    " " .
+                    date("j", $ts) .
+                    " " .
+                    $months[(int) date("n", $ts) - 1];
             }),
         );
         $twig->addFunction(
@@ -999,33 +1217,37 @@ class Website extends Site
         $twig->addFunction(
             new \Twig\TwigFunction("get_publishers_random", function () {
                 return get_posts([
-                    "post_type"   => "publishers",
+                    "post_type" => "publishers",
                     "numberposts" => 4,
-                    "orderby"     => "rand",
+                    "orderby" => "rand",
                 ]);
             }),
         );
         $twig->addFunction(
-            new \Twig\TwigFunction("get_proposte_by_publisher", function (int $publisher_id) {
+            new \Twig\TwigFunction("get_proposte_by_publisher", function (
+                int $publisher_id,
+            ) {
                 return get_posts([
-                    "post_type"      => "proposte-editoriali",
+                    "post_type" => "proposte-editoriali",
                     "posts_per_page" => -1,
-                    "orderby"        => "title",
-                    "order"          => "ASC",
-                    "meta_query"     => [[
-                        "key"     => "editore",
-                        "value"   => $publisher_id,
-                        "compare" => "=",
-                    ]],
+                    "orderby" => "title",
+                    "order" => "ASC",
+                    "meta_query" => [
+                        [
+                            "key" => "editore",
+                            "value" => $publisher_id,
+                            "compare" => "=",
+                        ],
+                    ],
                 ]);
             }),
         );
         $twig->addFunction(
             new \Twig\TwigFunction("get_producers_random", function () {
                 return get_posts([
-                    "post_type"   => "producers",
+                    "post_type" => "producers",
                     "numberposts" => 4,
-                    "orderby"     => "rand",
+                    "orderby" => "rand",
                 ]);
             }),
         );
@@ -1158,7 +1380,6 @@ class Website extends Site
 
         return $result;
     }
-
 
     /** Normalise an ACF relationship value to a flat array of integer post IDs. */
     private static function extract_post_ids(mixed $value): array

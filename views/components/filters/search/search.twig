@@ -2,7 +2,7 @@
   <input
     type="search"
     class="facetwp-search text-tight border-stroke h-full w-full cursor-pointer border px-4 py-3 pr-10 text-base uppercase transition-colors placeholder:uppercase focus:shadow-none! focus:ring-0! focus:outline-none! focus-visible:ring-0! focus-visible:outline-none!"
-    placeholder="{{ params.facet.placeholder }}"
+    placeholder="{{ function('pll__', params.facet.placeholder) }}"
     value="{{ params.selected_values[0] ?? "" }}"
   />
   <span

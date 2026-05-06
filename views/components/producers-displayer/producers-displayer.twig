@@ -44,9 +44,9 @@
       </div>
       {% if show_nav %}
         <div class="hero-carousel-nav producers-displayer-nav border-b-0">
-          <button class="swiper-button-prev" aria-label="Precedente"></button>
+          <button class="swiper-button-prev" aria-label="{{ function('pll__', 'Precedente') }}"></button>
           <div class="swiper-pagination" role="tablist"></div>
-          <button class="swiper-button-next" aria-label="Successivo"></button>
+          <button class="swiper-button-next" aria-label="{{ function('pll__', 'Successivo') }}"></button>
         </div>
       {% endif %}
     </div>

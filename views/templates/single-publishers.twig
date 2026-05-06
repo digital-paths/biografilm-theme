@@ -31,7 +31,7 @@
   {% if proposte %}
     <section class="w-full border-t border-stroke">
       <div class="border-stroke flex flex-col border-b px-6 pt-20 pb-10 xl:px-10 xl:pt-30 xl:pb-20">
-        <h2 class="heading-h4 blur-in font-semibold">Proposte editoriali</h2>
+        <h2 class="heading-h4 blur-in font-semibold">{{ function("pll__", "Proposte editoriali") }}</h2>
       </div>
       {% set count = proposte|length %}
       {% set is_odd = count % 2 == 1 %}

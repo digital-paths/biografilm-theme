@@ -33,7 +33,7 @@
             class: "size-5 shrink-0"
           })
         }}
-        Filtri
+        {{ function("pll__", "Filtri") }}
         <span class="filters-active-dot bg-red hidden size-2 rounded-full">
 
         </span>
@@ -113,8 +113,7 @@
           <p
             class="text-tight col-span-full py-30 text-center text-xl font-semibold text-black"
           >
-            Nessun risultato per i filtri selezionati.<br />Prova a modificare
-            la ricerca o resetta i filtri.
+            {{ function("pll__", "Nessun risultato per i filtri selezionati.") }}<br />{{ function("pll__", "Prova a modificare la ricerca o resetta i filtri.") }}
           </p>
         {% endfor %}
 

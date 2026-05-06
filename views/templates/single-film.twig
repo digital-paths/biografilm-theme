@@ -113,7 +113,7 @@
             <span
               class="blur-in border-stroke text-tight border-b pr-8 pb-6 text-base lg:pr-16 lg:text-xl"
             >
-              {{ altri_registi ? "Registi" : "Regista" }}
+              {{ altri_registi ? function("pll__", "Registi") : function("pll__", "Regista") }}
             </span>
             <span
               class="blur-in border-stroke text-tight border-b pb-6 text-base font-semibold lg:text-xl"
@@ -127,7 +127,7 @@
             <span
               class="blur-in border-stroke text-tight border-b py-6 pr-8 text-base lg:pr-16 lg:text-xl"
             >
-              {{ altri_titoli_alternativi ? "Titoli alternativi" : "Titolo alternativo" }}
+              {{ altri_titoli_alternativi ? function("pll__", "Titoli alternativi") : function("pll__", "Titolo alternativo") }}
             </span>
             <span
               class="blur-in border-stroke text-tight border-b py-6 text-base font-semibold lg:text-xl"
@@ -141,7 +141,7 @@
             <span
               class="blur-in border-stroke text-tight border-b py-6 pr-8 text-base lg:pr-16 lg:text-xl"
             >
-              Durata
+              {{ function("pll__", "Durata") }}
             </span>
             <span
               class="blur-in border-stroke text-tight border-b py-6 text-base font-semibold lg:text-xl"
@@ -155,7 +155,7 @@
             <span
               class="blur-in border-stroke text-tight border-b py-6 pr-8 text-base lg:pr-16 lg:text-xl"
             >
-              Paese
+              {{ function("pll__", "Paese") }}
             </span>
             <span
               class="blur-in border-stroke text-tight border-b py-6 text-base font-semibold lg:text-xl"
@@ -169,7 +169,7 @@
             <span
               class="blur-in border-stroke text-tight border-b py-6 pr-8 text-base lg:pr-16 lg:text-xl"
             >
-              Anno
+              {{ function("pll__", "Anno") }}
             </span>
             <span
               class="blur-in border-stroke text-tight border-b py-6 text-base font-semibold lg:text-xl"
@@ -183,7 +183,7 @@
             <span
               class="blur-in border-stroke text-tight border-b py-6 pr-8 text-base lg:pr-16 lg:text-xl"
             >
-              Genere
+              {{ function("pll__", "Genere") }}
             </span>
             <span
               class="blur-in border-stroke text-tight border-b py-6 text-base font-semibold lg:text-xl"
@@ -197,7 +197,7 @@
             <span
               class="blur-in border-stroke text-tight border-b py-6 pr-8 text-base lg:pr-16 lg:text-xl"
             >
-              Aree tematiche
+              {{ function("pll__", "Aree tematiche") }}
             </span>
             <span
               class="blur-in border-stroke text-tight border-b py-6 text-base font-semibold lg:text-xl"
@@ -253,7 +253,7 @@
         class="border-l-stroke col-span-3 flex flex-col gap-10 pb-12 lg:border-l xl:col-span-1 xl:py-12"
       >
         <h2 class="heading-h6 blur-in px-6 font-semibold xl:px-10">
-          Programmazione
+          {{ function("pll__", "Programmazione") }}
         </h2>
         <div class="flex flex-col gap-12">
           {% for proiezione in proiezioni %}
@@ -281,7 +281,7 @@
             {% if not loop.first %}
               <div class="blur-in flex items-center gap-4">
                 <span class="border-stroke flex-1 border-t"></span>
-                <span class="text-tight text-xl text-black">oppure</span>
+                <span class="text-tight text-xl text-black">{{ function("pll__", "oppure") }}</span>
                 <span class="border-stroke flex-1 border-t"></span>
               </div>
             {% endif %}
@@ -315,7 +315,7 @@
                       as_link: true,
                       variant: "default",
                       size: "sm",
-                      label: p_biglietto.title ? : "Compra biglietto",
+                      label: p_biglietto.title ? : function("pll__", "Compra biglietto"),
                       attributes: {
                         href: p_biglietto.url ?? p_biglietto,
                         target: p_biglietto.target ?? "_self",
@@ -341,7 +341,7 @@
                       {% include "components/button.twig" with {
                         as_link: true,
                         variant: "link",
-                        label: p_mymovies.title ? : "Guarda online su MyMovies",
+                        label: p_mymovies.title ? : function("pll__", "Guarda online su MyMovies"),
                         attributes: {
                           href: p_mymovies.url ?? p_mymovies,
                           target: p_mymovies.target ?? "_self",
@@ -364,7 +364,7 @@
         "components/card-displayer/card-displayer.twig",
         {
           component: {
-            title: "Scopri anche",
+            title: function("pll__", "Scopri anche"),
             items: related_films,
             always_even: true
           }

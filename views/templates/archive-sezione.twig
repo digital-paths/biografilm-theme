@@ -4,7 +4,7 @@
   {{
     include(
       "components/hero/hero.twig",
-      { hero_title: "Sezioni", hero_title_style: "primary" }
+      { hero_title: function("pll__", "Sezioni"), hero_title_style: "primary" }
     )
   }}
 {% endblock hero %}
@@ -29,7 +29,7 @@
         <p
           class="text-tight col-span-full py-30 text-center text-xl font-semibold text-black"
         >
-          Nessuna sezione trovata.
+          {{ function("pll__", "Nessuna sezione trovata.") }}
         </p>
       {% endfor %}
 

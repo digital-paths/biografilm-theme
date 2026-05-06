@@ -97,7 +97,7 @@
             <span
               class="blur-in border-stroke text-tight border-b pr-8 pb-6 text-base lg:pr-16 lg:text-xl"
             >
-              {{ altri_registi ? "Registi" : "Regista" }}
+              {{ altri_registi ? function("pll__", "Registi") : function("pll__", "Regista") }}
             </span>
             <span
               class="blur-in border-stroke text-tight border-b pb-6 text-base font-semibold lg:text-xl"
@@ -111,7 +111,7 @@
             <span
               class="blur-in border-stroke text-tight border-b py-6 pr-8 text-base lg:pr-16 lg:text-xl"
             >
-              {{ altri_titoli_alternativi ? "Titoli alternativi" : "Titolo alternativo" }}
+              {{ altri_titoli_alternativi ? function("pll__", "Titoli alternativi") : function("pll__", "Titolo alternativo") }}
             </span>
             <span
               class="blur-in border-stroke text-tight border-b py-6 text-base font-semibold lg:text-xl"
@@ -125,8 +125,8 @@
             <span
               class="blur-in border-stroke text-tight border-b py-6 pr-8 text-base lg:pr-16 lg:text-xl"
             >
-              Durata
-            </span>
+              {{ function("pll__", "Durata") }}
+</span>
             <span
               class="blur-in border-stroke text-tight border-b py-6 text-base font-semibold lg:text-xl"
             >
@@ -139,8 +139,8 @@
             <span
               class="blur-in border-stroke text-tight border-b py-6 pr-8 text-base lg:pr-16 lg:text-xl"
             >
-              Paese
-            </span>
+              {{ function("pll__", "Paese") }}
+</span>
             <span
               class="blur-in border-stroke text-tight border-b py-6 text-base font-semibold lg:text-xl"
             >
@@ -153,8 +153,8 @@
             <span
               class="blur-in border-stroke text-tight border-b py-6 pr-8 text-base lg:pr-16 lg:text-xl"
             >
-              Anno
-            </span>
+              {{ function("pll__", "Anno") }}
+</span>
             <span
               class="blur-in border-stroke text-tight border-b py-6 text-base font-semibold lg:text-xl"
             >
@@ -167,8 +167,8 @@
             <span
               class="blur-in border-stroke text-tight border-b py-6 pr-8 text-base lg:pr-16 lg:text-xl"
             >
-              Genere
-            </span>
+              {{ function("pll__", "Genere") }}
+</span>
             <span
               class="blur-in border-stroke text-tight border-b py-6 text-base font-semibold lg:text-xl"
             >

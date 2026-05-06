@@ -275,7 +275,7 @@
             <button
               @click="prev()"
               class="flex h-10 w-10 cursor-pointer items-center justify-center transition-opacity hover:opacity-60"
-              aria-label="Precedente"
+              aria-label="{{ function('pll__', 'Precedente') }}"
             >
               {{
                 include("icons/generic/chevron-right.svg")|attr({
@@ -286,7 +286,7 @@
             <button
               @click="next()"
               class="flex h-10 w-10 cursor-pointer items-center justify-center transition-opacity hover:opacity-60"
-              aria-label="Successivo"
+              aria-label="{{ function('pll__', 'Successivo') }}"
             >
               {{
                 include("icons/generic/chevron-right.svg")|attr({
@@ -299,7 +299,7 @@
           <button
             @click="close()"
             class="flex h-10 w-10 cursor-pointer items-center justify-center transition-opacity hover:opacity-60"
-            aria-label="Chiudi"
+            aria-label="{{ function('pll__', 'Chiudi') }}"
           >
             {{ include("icons/generic/close.svg")|attr({ class: "size-6" }) }}
           </button>

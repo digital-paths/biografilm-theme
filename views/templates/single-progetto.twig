@@ -17,12 +17,47 @@
 %}
 
 {% block hero %}
-  {% set hero_title = post.title %}
-  {% set hero_title_style = "news" %}
-  {{ include("components/hero/hero.twig") }}
 {% endblock hero %}
 
 {% block content %}
+  {# Hero image #}
+  {% if post.thumbnail %}
+    {% set thumb_id = function("get_post_thumbnail_id", post.ID) %}
+    {% set fp = thumb_id
+      ? function("get_post_meta", thumb_id, "focalpoint", true)
+      : null
+    %}
+    {% set fp_style = fp
+      ? "object-position: " ~ ((fp.left * 100)|round) ~ "% "
+        ~ ((fp.top * 100)|round)
+        ~ "%;"
+      : null
+    %}
+    <div
+      class="film-hero relative mt-[108px] h-[400px] w-full overflow-hidden lg:aspect-10/4 lg:h-auto"
+    >
+      <div
+        class="overlay-blur overlay absolute z-30 h-full w-full bg-transparent backdrop-blur-[50px]"
+      ></div>
+      <img
+        src="{{ post.thumbnail.src("full") }}"
+        alt="{{ post.title }}"
+        class="absolute inset-0 h-full w-full object-cover"
+        style="{{ fp_style }}"
+      />
+    </div>
+  {% endif %}
+
+  {# Title + breadcrumbs #}
+  <div
+    class="w-full px-6 py-20 xl:px-10 {{ not post.thumbnail ? 'mt-[108px]' : '' }}"
+  >
+    <div class="flex flex-col gap-6">
+      {{ include("parts/breadcrumbs.twig") }}
+      <h1 class="display-h1-news blur-in">{{ post.title }}</h1>
+    </div>
+  </div>
+
   <div class="border-b-stroke mx-auto grid grid-cols-3 border-b">
     {# Tabs — cols 1–2 #}
     <div class="col-span-3 xl:col-span-2">
@@ -40,12 +75,12 @@
     <div
       class="border-stroke col-span-3 flex flex-col gap-10 border-t border-l px-6 py-10 xl:col-span-1 xl:p-10"
     >
-      <h2 class="heading-h6 font-semibold">Informazioni</h2>
+      <h2 class="heading-h6 font-semibold">{{ function("pll__", "Informazioni") }}</h2>
 
       {% if progetto.periodo_inizio or progetto.periodo_fine %}
         <div class="flex flex-col gap-2">
           <span class="text-tight text-xl font-semibold text-black">
-            Periodo
+            {{ function("pll__", "Periodo") }}
           </span>
           <span class="text-tight text-xl">
             {% if progetto.periodo_inizio %}{{
@@ -61,7 +96,7 @@
       {% if status %}
         <div class="flex flex-col gap-2">
           <span class="text-tight text-xl font-semibold text-black">
-            Status
+            {{ function("pll__", "Status") }}
           </span>
           <span class="text-tight text-xl">
             {{ status|map(t => t.name)|join(" · ") }}
@@ -72,7 +107,7 @@
       {% if tipologia %}
         <div class="flex flex-col gap-2">
           <span class="text-tight text-xl font-semibold text-black">
-            Tipologia
+            {{ function("pll__", "Tipologia") }}
           </span>
           <span class="text-tight text-xl">
             {{ tipologia|map(t => t.name)|join(" · ") }}
@@ -83,7 +118,7 @@
       {% if target %}
         <div class="flex flex-col gap-2">
           <span class="text-tight text-xl font-semibold text-black">
-            Target
+            {{ function("pll__", "Target") }}
           </span>
           <span class="text-tight text-xl">
             {{ target|map(t => t.name)|join(" · ") }}
@@ -93,7 +128,7 @@
 
       {% if luogo %}
         <div class="flex flex-col gap-2">
-          <span class="text-tight text-xl font-semibold text-black">Luogo</span>
+          <span class="text-tight text-xl font-semibold text-black">{{ function("pll__", "Luogo") }}</span>
           <span class="text-tight text-xl">
             {{ luogo|map(t => t.name)|join(" · ") }}
           </span>
@@ -103,7 +138,7 @@
       {% if progetto.relatori_tutor %}
         <div class="flex flex-col gap-2">
           <span class="text-tight text-xl font-semibold text-black">
-            Relatori / Tutor
+            {{ function("pll__", "Relatori / Tutor") }}
           </span>
           <span class="text-tight text-xl">
             {{ progetto.relatori_tutor|map(r => r.nome)|join(" · ") }}
@@ -114,7 +149,7 @@
       {% if progetto.beneficiari %}
         <div class="flex flex-col gap-2">
           <span class="text-tight text-xl font-semibold text-black">
-            Beneficiari
+            {{ function("pll__", "Beneficiari") }}
           </span>
           <div class="prose text-tight max-w-none text-xl">
             {{ progetto.beneficiari }}
@@ -125,7 +160,7 @@
       {% if progetto.restituzione_finale %}
         <div class="flex flex-col gap-2">
           <span class="text-tight text-xl font-semibold text-black">
-            Restituzione finale
+            {{ function("pll__", "Restituzione finale") }}
           </span>
           <div class="prose text-tight max-w-none text-xl">
             {{ progetto.restituzione_finale }}

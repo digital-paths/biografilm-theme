@@ -185,7 +185,7 @@
     <div class="pointer-events-auto relative z-10">
       {% include "components/button.twig" with {
         as_link: true,
-        label: link_biglietto.title ? : "Compra biglietto",
+        label: link_biglietto.title ? : function("pll__", "Compra biglietto"),
         variant: "default",
         size: "lg",
         attributes: {

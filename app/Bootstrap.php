@@ -30,6 +30,7 @@ class Bootstrap
             Integrations\ACFExtended::class,
             Integrations\TinyMCE::class,
             Integrations\Polylang::class,
+            Integrations\FacetWP::class,
             Integrations\Yoast::class,
             WordPress\WordPress::class,
             WordPress\LoginPage::class,

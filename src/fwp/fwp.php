@@ -112,8 +112,34 @@ add_filter(
     2,
 );
 
+// Translate day abbreviations in the "days" radio facet based on current language.
+// facet_value is a date string (Y-m-d or Ymd); it_day logic is replicated here.
+add_filter(
+    "facetwp_facet_display_value",
+    function ($label, $params) {
+        if (($params["facet"]["name"] ?? "") !== "days") {
+            return $label;
+        }
+        $ts = strtotime($params["row"]["facet_value"] ?? "");
+        if (!$ts) {
+            return $label;
+        }
+        $is_en =
+            function_exists("pll_current_language") &&
+            pll_current_language() === "en";
+        $abbr = $is_en
+            ? ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
+            : ["DOM", "LUN", "MAR", "MER", "GIO", "VEN", "SAB"];
+        return $abbr[(int) date("w", $ts)] . " " . date("j", $ts);
+    },
+    10,
+    2,
+);
+
+// Auto-select the first available day on the programme pages (both Italian
+// /programma and English /en/festival/program).
 add_filter("facetwp_preload_url_vars", function ($url_vars) {
-    if (false === strpos(FWP()->helper->get_uri(), "programma")) {
+    if (false === strpos(FWP()->helper->get_uri(), "program")) {
         return $url_vars;
     }
 

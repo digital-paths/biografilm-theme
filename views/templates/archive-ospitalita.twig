@@ -4,7 +4,10 @@
   {{
     include(
       "components/hero/hero.twig",
-      { hero_title: "Ospitalità", hero_title_style: "primary" }
+      {
+        hero_title: function("pll__", "Ospitalità"),
+        hero_title_style: "primary"
+      }
     )
   }}
 {% endblock hero %}
@@ -25,7 +28,7 @@
         <p
           class="text-tight col-span-full py-30 text-center text-xl font-semibold text-black"
         >
-          Nessuna ospitalità trovata.
+          {{ function("pll__", "Nessuna ospitalità trovata.") }}
         </p>
       {% endfor %}
 
@@ -37,10 +40,14 @@
 
       {# 3-col fillers #}
       {% if count % 3 == 1 %}
-        <div class="border-stroke 3xl:hidden col-span-1 hidden border-l xl:block"></div>
+        <div
+          class="border-stroke 3xl:hidden col-span-1 hidden border-l xl:block"
+        ></div>
         <div class="3xl:hidden col-span-1 hidden xl:block"></div>
       {% elseif count % 3 == 2 %}
-        <div class="border-stroke 3xl:hidden col-span-1 hidden border-l xl:block"></div>
+        <div
+          class="border-stroke 3xl:hidden col-span-1 hidden border-l xl:block"
+        ></div>
       {% endif %}
 
       {# 4-col fillers #}
