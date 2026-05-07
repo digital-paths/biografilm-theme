@@ -154,6 +154,11 @@ class Proiezione extends \Timber\Post
                     ->appearance("multi_select")
                     ->create(true)
                     ->save(true),
+                Taxonomy::make("Tipo di evento", "tipo_di_evento")
+                    ->taxonomy("tipo-di-evento")
+                    ->appearance("multi_select")
+                    ->create(true)
+                    ->save(true),
                 Text::make("Sala o altre informazioni location", "sala_location")
                     ->helperText("Informazioni aggiuntive sulla location, es. «Sala 1», «Arena esterna», ecc."),
                 WYSIWYGEditor::make(

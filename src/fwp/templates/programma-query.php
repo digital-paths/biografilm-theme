@@ -1,6 +1,6 @@
 <?php
 return [
-    'post_type'      => ['proiezione'],
+    'post_type'      => ['proiezione', 'eventi-programma'],
     'post_status'    => ['publish'],
     'posts_per_page' => 100,
     'meta_query'     => [
@@ -8,13 +8,8 @@ return [
             'key'     => 'data',
             'compare' => 'EXISTS',
         ],
-        'orario_clause' => [
-            'key'     => 'orario',
-            'compare' => 'EXISTS',
-        ],
     ],
     'orderby' => [
-        'data_clause'   => 'ASC',
-        'orario_clause' => 'ASC',
+        'data_clause' => 'ASC',
     ],
 ];

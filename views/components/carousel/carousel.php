@@ -28,6 +28,14 @@ return [
 
             Tab::make("Extra")->placement("left"),
             Link::make("Link", "link")->format("array"),
+            Select::make("Tipo link", "link_type")
+                ->choices([
+                    "default" => "Primary",
+                    "secondary" => "Secondary",
+                    "link" => "Link",
+                ])
+                ->default("default")
+                ->wrapper(["width" => 50]),
             Image::make("Logo superiore", "logo")->format("array"),
             WYSIWYGEditor::make("Descrizione", "description")
                 ->toolbar(["bold", "italic"])

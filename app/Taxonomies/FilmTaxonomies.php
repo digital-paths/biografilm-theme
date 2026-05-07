@@ -30,8 +30,30 @@ class FilmTaxonomies
         ];
 
         register_extended_taxonomy(
+            "tipo-di-evento",
+            ["proiezione", "eventi-programma"],
+            [
+                "hierarchical" => false,
+                "labels" => [
+                    "name"          => "Tipi di evento",
+                    "singular_name" => "Tipo di evento",
+                    "add_new_item"  => "Aggiungi tipo di evento",
+                    "edit_item"     => "Modifica tipo di evento",
+                    "search_items"  => "Cerca tipi di evento",
+                    "not_found"     => "Nessun tipo di evento trovato",
+                    "all_items"     => "Tutti i tipi di evento",
+                ],
+            ],
+            [
+                "singular" => "Tipo di evento",
+                "plural"   => "Tipi di evento",
+                "slug"     => "tipo-di-evento",
+            ],
+        );
+
+        register_extended_taxonomy(
             "location",
-            ["proiezione"],
+            ["proiezione", "eventi-programma"],
             [
                 "hierarchical" => false,
                 "labels" => [

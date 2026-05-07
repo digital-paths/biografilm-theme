@@ -138,6 +138,36 @@ add_filter(
 
 // Auto-select the first available day on the programme pages (both Italian
 // /programma and English /en/festival/program).
+// Order the programma query by COALESCE(orario, orario_inizio) so that
+// proiezioni (orario) and eventi-programma (orario_inizio) sort together.
+add_filter(
+    "posts_clauses",
+    function ($clauses, $query) {
+        global $wpdb;
+        $types = (array) ($query->query_vars["post_type"] ?? []);
+        if (
+            !in_array("proiezione", $types) ||
+            !in_array("eventi-programma", $types)
+        ) {
+            return $clauses;
+        }
+
+        $clauses["join"] .=
+            " LEFT JOIN {$wpdb->postmeta} AS _pm_orario" .
+            " ON ({$wpdb->posts}.ID = _pm_orario.post_id AND _pm_orario.meta_key = 'orario')" .
+            " LEFT JOIN {$wpdb->postmeta} AS _pm_orario_inizio" .
+            " ON ({$wpdb->posts}.ID = _pm_orario_inizio.post_id AND _pm_orario_inizio.meta_key = 'orario_inizio')";
+
+        $clauses["orderby"] .=
+            ($clauses["orderby"] ? ", " : "") .
+            "COALESCE(_pm_orario.meta_value, _pm_orario_inizio.meta_value) ASC";
+
+        return $clauses;
+    },
+    20,
+    2,
+);
+
 add_filter("facetwp_preload_url_vars", function ($url_vars) {
     if (false === strpos(FWP()->helper->get_uri(), "program")) {
         return $url_vars;
@@ -148,7 +178,7 @@ add_filter("facetwp_preload_url_vars", function ($url_vars) {
     }
 
     $posts = get_posts([
-        "post_type" => "proiezione",
+        "post_type" => ["proiezione", "eventi-programma"],
         "post_status" => "publish",
         "posts_per_page" => 1,
         "meta_key" => "data",

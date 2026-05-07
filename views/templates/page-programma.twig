@@ -175,6 +175,9 @@
             {{ function("do_shortcode", '[facetwp facet="genere"]') }}
           </div>
           <div class="-ml-px flex-1">
+            {{ function("do_shortcode", '[facetwp facet="type_of_event"]') }}
+          </div>
+          <div class="-ml-px flex-1">
             {{ function("do_shortcode", '[facetwp facet="program_search"]') }}
           </div>
           <button
@@ -191,6 +194,7 @@
         state_var: "drawerOpen",
         facets: [
           "location",
+          "type_of_event",
           "program_search",
           "sezione",
           "area_tematica",

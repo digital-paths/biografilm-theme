@@ -42,6 +42,7 @@ class Website extends Site
         PostTypes\Producers::register();
         PostTypes\Publishers::register();
         PostTypes\ProposteEditoriali::register();
+        PostTypes\EventiProgramma::register();
     }
 
     #[Action("init")]

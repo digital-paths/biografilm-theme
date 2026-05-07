@@ -81,7 +81,7 @@
 {% set film_url = film_id ? function("get_permalink", film_id) : null %}
 
 <div
-  class="border-b-stroke group relative flex flex-col border-b transition-colors duration-[1500ms] ease-in-out hover:bg-gray-200 hover:duration-700 lg:flex-row lg:items-end"
+  class="border-b-stroke group relative flex flex-col border-b transition-colors duration-[1500ms] ease-in-out hover:bg-gray-200 hover:duration-700 lg:flex-row lg:items-end lg:border-b-0"
 >
   {# Film link — stretched over the full card, behind everything #}
   <a
@@ -131,7 +131,7 @@
     </div>
 
     {# Info #}
-    <div class="flex flex-1 flex-col gap-8 px-6 py-10 lg:px-8 lg:py-6">
+    <div class="flex flex-1 flex-col gap-8 px-6 py-10 lg:border-b lg:border-b-stroke lg:px-8 lg:py-6">
       <div class="flex flex-col gap-3">
         {% if sezione %}
           <p
@@ -182,7 +182,7 @@
 
   {# Ticket button — above the stretched film link #}
   {% if link_biglietto %}
-    <div class="pointer-events-auto relative z-10">
+    <div class="pointer-events-auto relative z-10 lg:border-b lg:border-b-stroke">
       {% include "components/button.twig" with {
         as_link: true,
         label: link_biglietto.title ? : function("pll__", "Compra biglietto"),
