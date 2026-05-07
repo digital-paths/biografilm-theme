@@ -1,7 +1,7 @@
 <section class="grid w-full grid-cols-1 xl:grid-cols-2">
   {% for item in component.items %}
     <div
-      class="col-span-1 {{ item.border_top ? "border-stroke border-t" : "" }} {{
+      class="col-span-1 flex flex-col {{ item.border_top ? "border-stroke border-t" : "" }} {{
       item.border_bottom
         ? "border-stroke border-b"
         : ""
@@ -35,7 +35,7 @@
       </div>
 
       <div
-        class="flex flex-col gap-10 px-6 py-10 xl:px-10 xl:pt-10 xl:pb-20 {{
+        class="flex flex-1 flex-col gap-10 px-6 py-10 xl:px-10 xl:pt-10 xl:pb-20 {{
         loop.index is odd
           ? "border-stroke xl:border-r"
           : ""
@@ -54,22 +54,24 @@
         </div>
 
         {% if item.link %}
-          {{
-            include(
-              "components/button.twig",
-              {
-                as_link: true,
-                variant: "default",
-                size: "lg",
-                label: item.link.title,
-                attributes: {
-                  href: item.link.url,
-                  target: item.link.target ? : "_self",
-                  class: "w-full blur-in"
+          <div class="mt-auto">
+            {{
+              include(
+                "components/button.twig",
+                {
+                  as_link: true,
+                  variant: "default",
+                  size: "lg",
+                  label: item.link.title,
+                  attributes: {
+                    href: item.link.url,
+                    target: item.link.target ? : "_self",
+                    class: "w-full blur-in"
+                  }
                 }
-              }
-            )
-          }}
+              )
+            }}
+          </div>
         {% endif %}
       </div>
     </div>
