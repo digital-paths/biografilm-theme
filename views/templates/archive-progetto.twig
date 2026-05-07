@@ -154,9 +154,15 @@
     pagination: posts.pagination({ show_all: false, mid_size: 3, end_size: 2 })
   } %}
 
-  {% include "parts/cta-bottom.twig" with {
-    cta_title: function("get_field", "progetti_cta_titolo", "option"),
-    cta_desc: function("get_field", "progetti_cta_descrizione", "option"),
-    cta_link: function("get_field", "progetti_cta_link", "option")
-  } %}
+  {% set components = function("get_field", "progetti_components", "option") %}
+  {% for component in components %}
+    {% set layout = component.acf_fc_layout|replace({ "_": "-" }) %}
+    {{
+      include(
+        "components/" ~ layout ~ "/" ~ layout ~ ".twig",
+        { component: component }
+      )
+    }}
+  {% endfor %}
+
 {% endblock content %}

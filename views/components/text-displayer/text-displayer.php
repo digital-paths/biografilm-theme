@@ -1,5 +1,7 @@
 <?php
 
+use Extended\ACF\Fields\Link;
+use Extended\ACF\Fields\Repeater;
 use Extended\ACF\Fields\Select;
 use Extended\ACF\Fields\Tab;
 use Extended\ACF\Fields\Text;
@@ -18,6 +20,22 @@ return [
         ->toolbar(["bold", "italic", "link"])
         ->tabs("all")
         ->disableMediaUpload(),
+
+    Tab::make("Links", "links_tab"),
+    Repeater::make("Links", "links")
+        ->layout("block")
+        ->collapsed("link")
+        ->button("Aggiungi link")
+        ->fields([
+            Link::make("Link", "link")->format("array"),
+            Select::make("Stile", "stile")
+                ->choices([
+                    "primary"   => "Bottone primario",
+                    "secondary" => "Bottone secondario",
+                    "link"      => "Link",
+                ])
+                ->default("primary"),
+        ]),
 
     Tab::make("Stile", "stile_tab"),
     Select::make("Dimensione heading", "heading_size")

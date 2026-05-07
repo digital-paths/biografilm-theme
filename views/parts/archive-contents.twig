@@ -1,4 +1,4 @@
-{% set intro = function("get_field", options_key, "option") %}
+{% set intro = function("get_field", intro_key, "option") %}
 {% if intro %}
   {{
     include(
@@ -49,3 +49,14 @@
 {% include "parts/pagination.twig" with {
   pagination: posts.pagination({ show_all: false, mid_size: 3, end_size: 2 })
 } %}
+
+{% set components = function("get_field", components_key, "option") %}
+{% for component in components %}
+  {% set layout = component.acf_fc_layout|replace({ "_": "-" }) %}
+  {{
+    include(
+      "components/" ~ layout ~ "/" ~ layout ~ ".twig",
+      { component: component }
+    )
+  }}
+{% endfor %}

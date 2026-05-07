@@ -31,10 +31,10 @@
       {% endif %}
     </div>
     <div
-      class="col-span-1 flex flex-col gap-6 pr-6 pl-6 xl:py-30 xl:pl-0 {{
-      is_40_60
-        ? "xl:pr-20"
-        : "xl:pr-10"
+      class="col-span-1 flex flex-col gap-6 pr-6 pl-6 xl:py-30 {{
+      is_rtl
+        ? (is_40_60 ? "xl:pr-0 xl:pl-20" : "xl:pr-0 xl:pl-10")
+        : (is_40_60 ? "xl:pl-0 xl:pr-20" : "xl:pl-0 xl:pr-10")
       }} {{ is_40_60 ? "" : "xl:col-span-2" }} {{
       is_rtl
         ? "xl:order-first"
@@ -55,6 +55,32 @@
           class="prose text-black0 blur-in max-w-none text-xl leading-[150%]"
         >
           {{ component.content }}
+        </div>
+      {% endif %}
+      {% if component.links %}
+        <div class="mt-10 flex flex-col gap-6">
+          {% for item in component.links %}
+            {% if item.link %}
+              {{
+                include(
+                  "components/button.twig",
+                  {
+                    as_link: true,
+                    size: "lg",
+                    variant: item.stile == "secondary"
+                      ? "outline"
+                      : item.stile == "link" ? "link" : "default",
+                    label: item.link.title,
+                    attributes: {
+                      href: item.link.url,
+                      target: item.link.target ? : "_self",
+                      class: "xl:w-fit w-full"
+                    }
+                  }
+                )
+              }}
+            {% endif %}
+          {% endfor %}
         </div>
       {% endif %}
     </div>

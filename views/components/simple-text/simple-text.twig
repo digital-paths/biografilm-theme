@@ -17,5 +17,31 @@
         {{ component.content }}
       </div>
     {% endif %}
+    {% if component.links %}
+      <div class="mt-10 flex flex-col gap-6">
+        {% for item in component.links %}
+          {% if item.link %}
+            {{
+              include(
+                "components/button.twig",
+                {
+                  as_link: true,
+                  size: "lg",
+                  variant: item.stile == "secondary"
+                    ? "outline"
+                    : item.stile == "link" ? "link" : "default",
+                  label: item.link.title,
+                  attributes: {
+                    href: item.link.url,
+                    target: item.link.target ? : "_self",
+                    class: "xl:w-fit w-full"
+                  }
+                }
+              )
+            }}
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
   </div>
 </section>
