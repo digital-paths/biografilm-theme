@@ -3,6 +3,7 @@
 {% set descrizione = function("get_field", "descrizione", id) %}
 {% set link_card = function("get_field", "link_card", id) %}
 {% set link = function("get_field", "link", id) %}
+{% set data = function("get_field", "data", id) %}
 {% set orario_inizio = function("get_field", "orario_inizio", id) %}
 {% set orario_fine = function("get_field", "orario_fine", id) %}
 {% set tipo_di_evento = function("wp_get_post_terms", id, "tipo-di-evento") %}
@@ -31,7 +32,7 @@
 
   <div class="pointer-events-none relative flex min-w-0 flex-1 flex-col lg:flex-row">
     <div
-      class="relative aspect-video w-full shrink-0 overflow-hidden bg-gray-200 lg:aspect-auto lg:w-65"
+      class="relative aspect-video w-full shrink-0 overflow-hidden bg-red lg:aspect-auto lg:w-65"
     >
       <div
         class="overlay absolute z-30 h-full w-full bg-transparent [mask-image:radial-gradient(ellipse_at_center,transparent_45%,black_90%)] backdrop-blur-[0px] transition-[backdrop-filter,_-webkit-backdrop-filter] duration-[1500ms] ease-in-out [-webkit-mask-image:radial-gradient(ellipse_at_center,transparent_45%,black_90%)] group-hover:backdrop-blur-[90px] group-hover:duration-700"
@@ -43,8 +44,8 @@
           : function("get_stylesheet_directory_uri") ~ "/assets/images/fallback-img-red.jpg"
         }}"
         alt="{{ title }}"
-        class="absolute inset-0 h-full w-full object-cover"
-        style="{{ fp_style }}"
+        class="absolute inset-0 h-full w-full {{ image_url ? 'object-cover' : 'object-contain object-center lg:inset-auto lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 lg:h-auto lg:w-full' }}"
+        {{ image_url ? 'style="' ~ fp_style ~ '"' }}
       />
     </div>
 
@@ -63,9 +64,9 @@
         {% endif %}
       </div>
       <div class="flex flex-wrap items-baseline gap-x-6 gap-y-1">
-        {% if orario_inizio %}
+        {% if data or orario_inizio %}
           <p class="text-tight text-base font-semibold text-black">
-            {{ orario_inizio }}{% if orario_fine %} – {{ orario_fine }}{% endif %}
+            {% if data %}{{ data|date("d F Y") }}{% endif %}{% if orario_inizio %}{% if data %}&ensp;·&ensp;{% endif %}{{ orario_inizio }}{% if orario_fine %} – {{ orario_fine }}{% endif %}{% endif %}
           </p>
         {% endif %}
         {% if location %}

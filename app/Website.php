@@ -251,7 +251,11 @@ class Website extends Site
 
         // Build breadcrumbs from page hierarchy
         $breadcrumbs = [];
-        if (is_post_type_archive("sezione")) {
+        if (is_404()) {
+            $crumb_home = function_exists("pll_home_url") ? pll_home_url() : home_url("/");
+            $breadcrumbs[] = ["url" => $crumb_home, "title" => "Biografilm"];
+            $breadcrumbs[] = ["url" => "", "title" => "404"];
+        } elseif (is_post_type_archive("sezione")) {
             $breadcrumbs[] = ["url" => home_url("/"), "title" => "Festival"];
             $breadcrumbs[] = [
                 "url" => "",
@@ -275,62 +279,86 @@ class Website extends Site
             $breadcrumbs[] = ["url" => "", "title" => "Ospitalità"];
         } elseif (is_post_type_archive("whos-coming")) {
             $industry_page = get_page_by_path("industry");
-            $breadcrumbs[] = ["url" => home_url("/"), "title" => "Biografilm"];
+            if ($industry_page && function_exists("pll_get_post")) {
+                $translated = pll_get_post($industry_page->ID);
+                if ($translated) {
+                    $industry_page = get_post($translated);
+                }
+            }
+            $crumb_home = function_exists("pll_home_url")
+                ? pll_home_url()
+                : home_url("/");
+            $breadcrumbs[] = ["url" => $crumb_home, "title" => "Biografilm"];
             $breadcrumbs[] = [
                 "url" => $industry_page
                     ? get_permalink($industry_page)
-                    : home_url("/"),
+                    : $crumb_home,
                 "title" => "Industry",
             ];
             $breadcrumbs[] = ["url" => "", "title" => "Who's Coming"];
         } elseif (is_post_type_archive("contents-doc")) {
             $industry_page = get_page_by_path("industry");
             $bio_to_bdoc_page = get_page_by_path("industry/bio-to-b-doc");
-            $breadcrumbs[] = ["url" => home_url("/"), "title" => "Biografilm"];
+            if (function_exists("pll_get_post")) {
+                if ($industry_page && ($t = pll_get_post($industry_page->ID))) {
+                    $industry_page = get_post($t);
+                }
+                if ($bio_to_bdoc_page && ($t = pll_get_post($bio_to_bdoc_page->ID))) {
+                    $bio_to_bdoc_page = get_post($t);
+                }
+            }
+            $crumb_home = function_exists("pll_home_url") ? pll_home_url() : home_url("/");
+            $breadcrumbs[] = ["url" => $crumb_home, "title" => "Biografilm"];
             $breadcrumbs[] = [
-                "url" => $industry_page
-                    ? get_permalink($industry_page)
-                    : home_url("/"),
+                "url" => $industry_page ? get_permalink($industry_page) : $crumb_home,
                 "title" => "Industry",
             ];
             $breadcrumbs[] = [
-                "url" => $bio_to_bdoc_page
-                    ? get_permalink($bio_to_bdoc_page)
-                    : "",
+                "url" => $bio_to_bdoc_page ? get_permalink($bio_to_bdoc_page) : "",
                 "title" => "Bio to B | Doc",
             ];
             $breadcrumbs[] = ["url" => "", "title" => "Contents"];
         } elseif (is_post_type_archive("contents-drama")) {
             $industry_page = get_page_by_path("industry");
             $bio_to_bdrama_page = get_page_by_path("industry/bio-to-b-drama");
-            $breadcrumbs[] = ["url" => home_url("/"), "title" => "Biografilm"];
+            if (function_exists("pll_get_post")) {
+                if ($industry_page && ($t = pll_get_post($industry_page->ID))) {
+                    $industry_page = get_post($t);
+                }
+                if ($bio_to_bdrama_page && ($t = pll_get_post($bio_to_bdrama_page->ID))) {
+                    $bio_to_bdrama_page = get_post($t);
+                }
+            }
+            $crumb_home = function_exists("pll_home_url") ? pll_home_url() : home_url("/");
+            $breadcrumbs[] = ["url" => $crumb_home, "title" => "Biografilm"];
             $breadcrumbs[] = [
-                "url" => $industry_page
-                    ? get_permalink($industry_page)
-                    : home_url("/"),
+                "url" => $industry_page ? get_permalink($industry_page) : $crumb_home,
                 "title" => "Industry",
             ];
             $breadcrumbs[] = [
-                "url" => $bio_to_bdrama_page
-                    ? get_permalink($bio_to_bdrama_page)
-                    : "",
+                "url" => $bio_to_bdrama_page ? get_permalink($bio_to_bdrama_page) : "",
                 "title" => "Bio to B | Drama",
             ];
             $breadcrumbs[] = ["url" => "", "title" => "Contents"];
         } elseif (is_post_type_archive("producers")) {
             $industry_page = get_page_by_path("industry");
             $bio_to_bdrama_page = get_page_by_path("industry/bio-to-b-drama");
-            $breadcrumbs[] = ["url" => home_url("/"), "title" => "Biografilm"];
+            if (function_exists("pll_get_post")) {
+                if ($industry_page && ($t = pll_get_post($industry_page->ID))) {
+                    $industry_page = get_post($t);
+                }
+                if ($bio_to_bdrama_page && ($t = pll_get_post($bio_to_bdrama_page->ID))) {
+                    $bio_to_bdrama_page = get_post($t);
+                }
+            }
+            $crumb_home = function_exists("pll_home_url") ? pll_home_url() : home_url("/");
+            $breadcrumbs[] = ["url" => $crumb_home, "title" => "Biografilm"];
             $breadcrumbs[] = [
-                "url" => $industry_page
-                    ? get_permalink($industry_page)
-                    : home_url("/"),
+                "url" => $industry_page ? get_permalink($industry_page) : $crumb_home,
                 "title" => "Industry",
             ];
             $breadcrumbs[] = [
-                "url" => $bio_to_bdrama_page
-                    ? get_permalink($bio_to_bdrama_page)
-                    : "",
+                "url" => $bio_to_bdrama_page ? get_permalink($bio_to_bdrama_page) : "",
                 "title" => "Bio to B | Drama",
             ];
             $breadcrumbs[] = [
@@ -341,17 +369,22 @@ class Website extends Site
         } elseif (is_post_type_archive("publishers")) {
             $industry_page = get_page_by_path("industry");
             $bio_to_bdrama_page = get_page_by_path("industry/bio-to-b-drama");
-            $breadcrumbs[] = ["url" => home_url("/"), "title" => "Biografilm"];
+            if (function_exists("pll_get_post")) {
+                if ($industry_page && ($t = pll_get_post($industry_page->ID))) {
+                    $industry_page = get_post($t);
+                }
+                if ($bio_to_bdrama_page && ($t = pll_get_post($bio_to_bdrama_page->ID))) {
+                    $bio_to_bdrama_page = get_post($t);
+                }
+            }
+            $crumb_home = function_exists("pll_home_url") ? pll_home_url() : home_url("/");
+            $breadcrumbs[] = ["url" => $crumb_home, "title" => "Biografilm"];
             $breadcrumbs[] = [
-                "url" => $industry_page
-                    ? get_permalink($industry_page)
-                    : home_url("/"),
+                "url" => $industry_page ? get_permalink($industry_page) : $crumb_home,
                 "title" => "Industry",
             ];
             $breadcrumbs[] = [
-                "url" => $bio_to_bdrama_page
-                    ? get_permalink($bio_to_bdrama_page)
-                    : "",
+                "url" => $bio_to_bdrama_page ? get_permalink($bio_to_bdrama_page) : "",
                 "title" => "Bio to B | Drama",
             ];
             $breadcrumbs[] = [
@@ -423,26 +456,29 @@ class Website extends Site
                 ];
             } elseif (get_post_type($post->ID) === "producers") {
                 $industry_page = get_page_by_path("industry");
-                $bio_to_bdrama_page = get_page_by_path(
-                    "industry/bio-to-b-drama",
-                );
+                $bio_to_bdrama_page = get_page_by_path("industry/bio-to-b-drama");
                 $producers_page =
                     get_page_by_path("industry/bio-to-b-drama/producers") ?:
                     get_page_by_path("producers");
+                if (function_exists("pll_get_post")) {
+                    if ($industry_page && ($t = pll_get_post($industry_page->ID))) {
+                        $industry_page = get_post($t);
+                    }
+                    if ($bio_to_bdrama_page && ($t = pll_get_post($bio_to_bdrama_page->ID))) {
+                        $bio_to_bdrama_page = get_post($t);
+                    }
+                    if ($producers_page && ($t = pll_get_post($producers_page->ID))) {
+                        $producers_page = get_post($t);
+                    }
+                }
+                $crumb_home = function_exists("pll_home_url") ? pll_home_url() : home_url("/");
+                $breadcrumbs[] = ["url" => $crumb_home, "title" => "Biografilm"];
                 $breadcrumbs[] = [
-                    "url" => home_url("/"),
-                    "title" => "Biografilm",
-                ];
-                $breadcrumbs[] = [
-                    "url" => $industry_page
-                        ? get_permalink($industry_page)
-                        : home_url("/"),
+                    "url" => $industry_page ? get_permalink($industry_page) : $crumb_home,
                     "title" => "Industry",
                 ];
                 $breadcrumbs[] = [
-                    "url" => $bio_to_bdrama_page
-                        ? get_permalink($bio_to_bdrama_page)
-                        : "",
+                    "url" => $bio_to_bdrama_page ? get_permalink($bio_to_bdrama_page) : "",
                     "title" => "Bio to B | Drama",
                 ];
                 $breadcrumbs[] = [
@@ -455,32 +491,32 @@ class Website extends Site
                         : get_post_type_archive_link("producers"),
                     "title" => "Producers",
                 ];
-                $breadcrumbs[] = [
-                    "url" => "",
-                    "title" => get_the_title($post->ID),
-                ];
+                $breadcrumbs[] = ["url" => "", "title" => get_the_title($post->ID)];
             } elseif (get_post_type($post->ID) === "publishers") {
                 $industry_page = get_page_by_path("industry");
-                $bio_to_bdrama_page = get_page_by_path(
-                    "industry/bio-to-b-drama",
-                );
+                $bio_to_bdrama_page = get_page_by_path("industry/bio-to-b-drama");
                 $publishers_page =
                     get_page_by_path("industry/bio-to-b-drama/publishers") ?:
                     get_page_by_path("publishers");
+                if (function_exists("pll_get_post")) {
+                    if ($industry_page && ($t = pll_get_post($industry_page->ID))) {
+                        $industry_page = get_post($t);
+                    }
+                    if ($bio_to_bdrama_page && ($t = pll_get_post($bio_to_bdrama_page->ID))) {
+                        $bio_to_bdrama_page = get_post($t);
+                    }
+                    if ($publishers_page && ($t = pll_get_post($publishers_page->ID))) {
+                        $publishers_page = get_post($t);
+                    }
+                }
+                $crumb_home = function_exists("pll_home_url") ? pll_home_url() : home_url("/");
+                $breadcrumbs[] = ["url" => $crumb_home, "title" => "Biografilm"];
                 $breadcrumbs[] = [
-                    "url" => home_url("/"),
-                    "title" => "Biografilm",
-                ];
-                $breadcrumbs[] = [
-                    "url" => $industry_page
-                        ? get_permalink($industry_page)
-                        : home_url("/"),
+                    "url" => $industry_page ? get_permalink($industry_page) : $crumb_home,
                     "title" => "Industry",
                 ];
                 $breadcrumbs[] = [
-                    "url" => $bio_to_bdrama_page
-                        ? get_permalink($bio_to_bdrama_page)
-                        : "",
+                    "url" => $bio_to_bdrama_page ? get_permalink($bio_to_bdrama_page) : "",
                     "title" => "Bio to B | Drama",
                 ];
                 $breadcrumbs[] = [
@@ -493,10 +529,7 @@ class Website extends Site
                         : get_post_type_archive_link("publishers"),
                     "title" => "Publishers",
                 ];
-                $breadcrumbs[] = [
-                    "url" => "",
-                    "title" => get_the_title($post->ID),
-                ];
+                $breadcrumbs[] = ["url" => "", "title" => get_the_title($post->ID)];
             } elseif (get_post_type($post->ID) === "film") {
                 $breadcrumbs[] = [
                     "url" => home_url("/"),
@@ -641,59 +674,55 @@ class Website extends Site
             } elseif (get_post_type($post->ID) === "contents-doc") {
                 $industry_page = get_page_by_path("industry");
                 $bio_to_bdoc_page = get_page_by_path("industry/bio-to-b-doc");
+                if (function_exists("pll_get_post")) {
+                    if ($industry_page && ($t = pll_get_post($industry_page->ID))) {
+                        $industry_page = get_post($t);
+                    }
+                    if ($bio_to_bdoc_page && ($t = pll_get_post($bio_to_bdoc_page->ID))) {
+                        $bio_to_bdoc_page = get_post($t);
+                    }
+                }
+                $crumb_home = function_exists("pll_home_url") ? pll_home_url() : home_url("/");
+                $breadcrumbs[] = ["url" => $crumb_home, "title" => "Biografilm"];
                 $breadcrumbs[] = [
-                    "url" => home_url("/"),
-                    "title" => "Biografilm",
-                ];
-                $breadcrumbs[] = [
-                    "url" => $industry_page
-                        ? get_permalink($industry_page)
-                        : home_url("/"),
+                    "url" => $industry_page ? get_permalink($industry_page) : $crumb_home,
                     "title" => "Industry",
                 ];
                 $breadcrumbs[] = [
-                    "url" => $bio_to_bdoc_page
-                        ? get_permalink($bio_to_bdoc_page)
-                        : "",
+                    "url" => $bio_to_bdoc_page ? get_permalink($bio_to_bdoc_page) : "",
                     "title" => "Bio to B | Doc",
                 ];
                 $breadcrumbs[] = [
                     "url" => get_post_type_archive_link("contents-doc"),
                     "title" => "Contents",
                 ];
-                $breadcrumbs[] = [
-                    "url" => "",
-                    "title" => get_the_title($post->ID),
-                ];
+                $breadcrumbs[] = ["url" => "", "title" => get_the_title($post->ID)];
             } elseif (get_post_type($post->ID) === "contents-drama") {
                 $industry_page = get_page_by_path("industry");
-                $bio_to_bdrama_page = get_page_by_path(
-                    "industry/bio-to-b-drama",
-                );
+                $bio_to_bdrama_page = get_page_by_path("industry/bio-to-b-drama");
+                if (function_exists("pll_get_post")) {
+                    if ($industry_page && ($t = pll_get_post($industry_page->ID))) {
+                        $industry_page = get_post($t);
+                    }
+                    if ($bio_to_bdrama_page && ($t = pll_get_post($bio_to_bdrama_page->ID))) {
+                        $bio_to_bdrama_page = get_post($t);
+                    }
+                }
+                $crumb_home = function_exists("pll_home_url") ? pll_home_url() : home_url("/");
+                $breadcrumbs[] = ["url" => $crumb_home, "title" => "Biografilm"];
                 $breadcrumbs[] = [
-                    "url" => home_url("/"),
-                    "title" => "Biografilm",
-                ];
-                $breadcrumbs[] = [
-                    "url" => $industry_page
-                        ? get_permalink($industry_page)
-                        : home_url("/"),
+                    "url" => $industry_page ? get_permalink($industry_page) : $crumb_home,
                     "title" => "Industry",
                 ];
                 $breadcrumbs[] = [
-                    "url" => $bio_to_bdrama_page
-                        ? get_permalink($bio_to_bdrama_page)
-                        : "",
+                    "url" => $bio_to_bdrama_page ? get_permalink($bio_to_bdrama_page) : "",
                     "title" => "Bio to B | Drama",
                 ];
                 $breadcrumbs[] = [
                     "url" => get_post_type_archive_link("contents-drama"),
                     "title" => "Contents",
                 ];
-                $breadcrumbs[] = [
-                    "url" => "",
-                    "title" => get_the_title($post->ID),
-                ];
+                $breadcrumbs[] = ["url" => "", "title" => get_the_title($post->ID)];
             } elseif (get_post_type($post->ID) === "progetti-doc") {
                 $industry_page = get_page_by_path("industry");
                 $bio_to_bdoc_page = get_page_by_path("industry/bio-to-b-doc");
@@ -753,82 +782,81 @@ class Website extends Site
             } elseif (get_post_type($post->ID) === "attivita-doc") {
                 $industry_page = get_page_by_path("industry");
                 $bio_to_bdoc_page = get_page_by_path("industry/bio-to-b-doc");
+                if (function_exists("pll_get_post")) {
+                    if ($industry_page && ($t = pll_get_post($industry_page->ID))) {
+                        $industry_page = get_post($t);
+                    }
+                    if ($bio_to_bdoc_page && ($t = pll_get_post($bio_to_bdoc_page->ID))) {
+                        $bio_to_bdoc_page = get_post($t);
+                    }
+                }
+                $crumb_home = function_exists("pll_home_url") ? pll_home_url() : home_url("/");
+                $breadcrumbs[] = ["url" => $crumb_home, "title" => "Biografilm"];
                 $breadcrumbs[] = [
-                    "url" => home_url("/"),
-                    "title" => "Biografilm",
-                ];
-                $breadcrumbs[] = [
-                    "url" => $industry_page
-                        ? get_permalink($industry_page)
-                        : home_url("/"),
+                    "url" => $industry_page ? get_permalink($industry_page) : $crumb_home,
                     "title" => "Industry",
                 ];
                 $breadcrumbs[] = [
-                    "url" => $bio_to_bdoc_page
-                        ? get_permalink($bio_to_bdoc_page)
-                        : "",
+                    "url" => $bio_to_bdoc_page ? get_permalink($bio_to_bdoc_page) : "",
                     "title" => "Bio to B | Doc",
                 ];
                 $breadcrumbs[] = [
                     "url" => get_post_type_archive_link("contents-doc"),
                     "title" => "Contents",
                 ];
-                $breadcrumbs[] = [
-                    "url" => "",
-                    "title" => get_the_title($post->ID),
-                ];
+                $breadcrumbs[] = ["url" => "", "title" => get_the_title($post->ID)];
             } elseif (get_post_type($post->ID) === "attivita-drama") {
                 $industry_page = get_page_by_path("industry");
-                $bio_to_bdrama_page = get_page_by_path(
-                    "industry/bio-to-b-drama",
-                );
+                $bio_to_bdrama_page = get_page_by_path("industry/bio-to-b-drama");
+                if (function_exists("pll_get_post")) {
+                    if ($industry_page && ($t = pll_get_post($industry_page->ID))) {
+                        $industry_page = get_post($t);
+                    }
+                    if ($bio_to_bdrama_page && ($t = pll_get_post($bio_to_bdrama_page->ID))) {
+                        $bio_to_bdrama_page = get_post($t);
+                    }
+                }
+                $crumb_home = function_exists("pll_home_url") ? pll_home_url() : home_url("/");
+                $breadcrumbs[] = ["url" => $crumb_home, "title" => "Biografilm"];
                 $breadcrumbs[] = [
-                    "url" => home_url("/"),
-                    "title" => "Biografilm",
-                ];
-                $breadcrumbs[] = [
-                    "url" => $industry_page
-                        ? get_permalink($industry_page)
-                        : home_url("/"),
+                    "url" => $industry_page ? get_permalink($industry_page) : $crumb_home,
                     "title" => "Industry",
                 ];
                 $breadcrumbs[] = [
-                    "url" => $bio_to_bdrama_page
-                        ? get_permalink($bio_to_bdrama_page)
-                        : "",
+                    "url" => $bio_to_bdrama_page ? get_permalink($bio_to_bdrama_page) : "",
                     "title" => "Bio to B | Drama",
                 ];
                 $breadcrumbs[] = [
                     "url" => get_post_type_archive_link("contents-drama"),
                     "title" => "Contents",
                 ];
-                $breadcrumbs[] = [
-                    "url" => "",
-                    "title" => get_the_title($post->ID),
-                ];
+                $breadcrumbs[] = ["url" => "", "title" => get_the_title($post->ID)];
             } elseif (get_post_type($post->ID) === "proposte-editoriali") {
                 $industry_page = get_page_by_path("industry");
-                $bio_to_bdrama_page = get_page_by_path(
-                    "industry/bio-to-b-drama",
-                );
+                $bio_to_bdrama_page = get_page_by_path("industry/bio-to-b-drama");
                 $publishers_page =
                     get_page_by_path("industry/bio-to-b-drama/publishers") ?:
                     get_page_by_path("publishers");
+                if (function_exists("pll_get_post")) {
+                    if ($industry_page && ($t = pll_get_post($industry_page->ID))) {
+                        $industry_page = get_post($t);
+                    }
+                    if ($bio_to_bdrama_page && ($t = pll_get_post($bio_to_bdrama_page->ID))) {
+                        $bio_to_bdrama_page = get_post($t);
+                    }
+                    if ($publishers_page && ($t = pll_get_post($publishers_page->ID))) {
+                        $publishers_page = get_post($t);
+                    }
+                }
                 $editore = get_field("editore", $post->ID);
+                $crumb_home = function_exists("pll_home_url") ? pll_home_url() : home_url("/");
+                $breadcrumbs[] = ["url" => $crumb_home, "title" => "Biografilm"];
                 $breadcrumbs[] = [
-                    "url" => home_url("/"),
-                    "title" => "Biografilm",
-                ];
-                $breadcrumbs[] = [
-                    "url" => $industry_page
-                        ? get_permalink($industry_page)
-                        : home_url("/"),
+                    "url" => $industry_page ? get_permalink($industry_page) : $crumb_home,
                     "title" => "Industry",
                 ];
                 $breadcrumbs[] = [
-                    "url" => $bio_to_bdrama_page
-                        ? get_permalink($bio_to_bdrama_page)
-                        : "",
+                    "url" => $bio_to_bdrama_page ? get_permalink($bio_to_bdrama_page) : "",
                     "title" => "Bio to B | Drama",
                 ];
                 $breadcrumbs[] = [
@@ -847,10 +875,7 @@ class Website extends Site
                         "title" => get_the_title($editore->ID),
                     ];
                 }
-                $breadcrumbs[] = [
-                    "url" => "",
-                    "title" => get_the_title($post->ID),
-                ];
+                $breadcrumbs[] = ["url" => "", "title" => get_the_title($post->ID)];
             } else {
                 $ancestors = get_post_ancestors($post->ID);
                 $home_label =

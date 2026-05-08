@@ -165,9 +165,7 @@
         <div class="mt-auto flex flex-wrap items-baseline gap-x-6 gap-y-1">
           {% if proiezione.data or proiezione.orario %}
             <p class="text-tight text-base font-semibold text-black">
-              {{ proiezione.data|date("d F Y") }}{% if proiezione.orario %}
-                · {{ proiezione.orario|date("H:i") }}
-              {% endif %}
+              {{ proiezione.data|date("d F Y") }}{% if proiezione.orario %}&ensp;·&ensp;{{ proiezione.orario|date("H:i") }}{% endif %}
             </p>
           {% endif %}
           {% if location %}

@@ -72,7 +72,7 @@ class WhosComing extends \Timber\Post
                     ->layout("block")
                     ->fields([
                         Tab::make("Informazioni", "informazioni_tab"),
-                        Text::make("Professione libera", "professione_libera")
+                        Text::make("Area professionale libera", "professione_libera")
                             ->helperText("Campo testuale libero, in alternativa alla tassonomia."),
                         Group::make("Azienda", "azienda")
                             ->layout("block")
@@ -103,7 +103,7 @@ class WhosComing extends \Timber\Post
                             ->appearance("multi_select")
                             ->create(true)
                             ->save(true),
-                        Taxonomy::make("Professione", "professione")
+                        Taxonomy::make("Area Professionale", "professione")
                             ->taxonomy("professione-whos-coming")
                             ->appearance("multi_select")
                             ->create(true)

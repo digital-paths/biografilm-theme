@@ -96,6 +96,11 @@ class Translations
         "Beneficiari" => ["en" => "Beneficiaries"],
         "Restituzione finale" => ["en" => "Final presentation"],
 
+        // 404
+        "Pagina non trovata" => ["en" => "Page not found"],
+        "La pagina che cerchi non esiste o è stata spostata." => ["en" => "The page you're looking for doesn't exist or has been moved."],
+        "Torna alla home" => ["en" => "Back to home"],
+
         // Single sezione / news / related
         "Film in sezione" => ["en" => "Films in section"],
         "Leggi anche" => ["en" => "Read also"],
@@ -103,9 +108,12 @@ class Translations
 
         // Single whos-coming — info labels
         "Nome" => ["en" => "Name"],
-        "Professione" => ["en" => "Profession"],
+        "Area Professionale" => ["en" => "Professional Area"],
+        "Area professionale" => ["en" => "Professional Area"],
+        "Accrediti" => ["en" => "Accreditations"],
         "Azienda" => ["en" => "Company"],
         "Accredito" => ["en" => "Accreditation"],
+        "Cerca..." => ["en" => "Search..."],
         "Link utili" => ["en" => "Useful links"],
 
         // Single proposta editoriale — info labels

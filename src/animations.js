@@ -13,6 +13,17 @@ document.addEventListener("DOMContentLoaded", () => {
   // momentum on touch-only devices and causes sluggish/unstable behaviour.
   const isTouch = ScrollTrigger.isTouch === 1;
 
+  // Let native scroll work inside FaceWP option lists (and any overflow container
+  // that needs its own scroll). Must be registered before ScrollSmoother.create()
+  // so it runs first in the capture phase and stops GSAP from seeing the event.
+  document.addEventListener(
+    "wheel",
+    (e) => {
+      if (e.target.closest(".fs-options")) e.stopImmediatePropagation();
+    },
+    { capture: true, passive: false },
+  );
+
   const smoother = ScrollSmoother.create({
     wrapper: "#smooth-wrapper",
     content: "#smooth-content",

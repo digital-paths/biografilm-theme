@@ -14,8 +14,8 @@ class WhosComingTaxonomies
             ],
             [
                 "slug"     => "professione-whos-coming",
-                "singular" => "Professione",
-                "plural"   => "Professioni",
+                "singular" => "Professional Area",
+                "plural"   => "Professional Areas",
             ],
             [
                 "slug"     => "paese-whos-coming",

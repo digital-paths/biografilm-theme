@@ -30,16 +30,28 @@ class Producers extends \Timber\Post
 
     private static function register_rewrite_rules()
     {
-        add_rewrite_rule(
-            '^industry/bio-to-b-drama/contents/producers/([^/]+)/?$',
-            'index.php?post_type=producers&name=$matches[1]',
-            'top'
-        );
-        add_rewrite_rule(
-            '^industry/bio-to-b-drama/contents/producers/?$',
-            'index.php?post_type=producers',
-            'top'
-        );
+        $prefixes = [''];
+        if (function_exists('pll_languages_list') && function_exists('pll_default_language')) {
+            $default = pll_default_language('slug');
+            foreach (pll_languages_list(['fields' => 'slug']) as $slug) {
+                if ($slug !== $default) {
+                    $prefixes[] = $slug . '/';
+                }
+            }
+        }
+
+        foreach ($prefixes as $prefix) {
+            add_rewrite_rule(
+                '^' . $prefix . 'industry/bio-to-b-drama/contents/producers/([^/]+)/?$',
+                'index.php?post_type=producers&name=$matches[1]',
+                'top'
+            );
+            add_rewrite_rule(
+                '^' . $prefix . 'industry/bio-to-b-drama/contents/producers/?$',
+                'index.php?post_type=producers',
+                'top'
+            );
+        }
     }
 
     private static function register_custom_fields()
