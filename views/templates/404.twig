@@ -4,24 +4,34 @@
   {{
     include(
       "components/hero/hero.twig",
-      { hero_title: function("pll__", "Pagina non trovata"), hero_title_style: "primary" }
+      {
+        hero_title: function("pll__", "Pagina non trovata"),
+        hero_title_style: "primary"
+      }
     )
   }}
 {% endblock hero %}
 
 {% block content %}
-  <div class="border-stroke flex flex-col items-start justify-between gap-10 border-t px-6 py-16 lg:flex-row lg:items-center xl:px-10">
-    <p class="text-tight max-w-lg text-xl text-black/60">
-      {{ function("pll__", "La pagina che cerchi non esiste o è stata spostata.") }}
+  <div
+    class="border-stroke flex flex-col items-start justify-between gap-10 border-t px-6 py-16 lg:flex-row lg:items-center xl:px-10"
+  >
+    <p class="text-tight max-w-lg text-xl text-black/80">
+      {{
+        function("pll__", "La pagina che cerchi non esiste o è stata spostata.")
+      }}
     </p>
     {{
-      include("components/button.twig", {
-        as_link: true,
-        label: function("pll__", "Torna alla home"),
-        variant: "default",
-        size: "lg",
-        attributes: { href: function("pll_home_url") ?: "/" }
-      })
+      include(
+        "components/button.twig",
+        {
+          as_link: true,
+          label: function("pll__", "Torna alla home"),
+          variant: "default",
+          size: "lg",
+          attributes: { href: function("pll_home_url") ? : "/" }
+        }
+      )
     }}
   </div>
 {% endblock content %}

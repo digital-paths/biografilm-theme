@@ -1,6 +1,8 @@
 {% set project_id = project.ID %}
 {% set permalink = function("get_permalink", project_id) %}
-{% set image_url = function("get_the_post_thumbnail_url", project_id, "large") %}
+{% set image_url =
+  function("get_the_post_thumbnail_url", project_id, "large")
+%}
 {% set anteprima = function("get_field", "anteprima", project_id) %}
 {% set preview_raw = function("get_field", "preview", project_id) %}
 {% if not preview_raw %}
@@ -8,9 +10,15 @@
   {% set autore = function("get_field", "autore", project_id) %}
   {% set editore = function("get_field", "editore", project_id) %}
   {% set genere = function("wp_get_post_terms", project_id, "pe-genere")[0] %}
-  {% if autore %}{% set preview_parts = preview_parts|merge([autore]) %}{% endif %}
-  {% if editore %}{% set preview_parts = preview_parts|merge([editore.post_title]) %}{% endif %}
-  {% if genere %}{% set preview_parts = preview_parts|merge([genere.name]) %}{% endif %}
+  {% if autore %}{% set preview_parts =
+    preview_parts|merge([autore])
+  %}{% endif %}
+  {% if editore %}{% set preview_parts =
+    preview_parts|merge([editore.post_title])
+  %}{% endif %}
+  {% if genere %}{% set preview_parts =
+    preview_parts|merge([genere.name])
+  %}{% endif %}
   {% set preview = preview_parts|join(" / ") %}
 {% else %}
   {% set preview = preview_raw %}
@@ -18,21 +26,33 @@
 
 <a
   href="{{ permalink }}"
-  class="group col-span-1 grid grid-cols-[auto_1fr] {{ no_border ? '' : 'border-stroke border-b' }} {{ extra_class }}"
+  class="group col-span-1 grid grid-cols-[auto_1fr] {{
+  no_border
+    ? ""
+    : "border-stroke border-b"
+  }} {{ extra_class }}"
 >
-  <div class="flex h-full w-32 items-stretch justify-start overflow-hidden bg-gray-50 lg:w-48">
+  <div
+    class="flex h-full w-32 items-stretch justify-start overflow-hidden bg-gray-50 lg:w-48"
+  >
     <img
-      src="{{ image_url ?: site.theme.link ~ "/assets/images/fallback-img.jpg" }}"
+      src="{{
+      image_url
+        ?
+        : site.theme.link ~ "/assets/images/fallback-img.jpg"
+      }}"
       alt="{{ project.post_title }}"
       class="h-full w-full object-cover object-left transition-all duration-500 group-hover:scale-[1.03]"
     />
   </div>
   <div class="border-l-stroke flex flex-col gap-3 border-l px-6 py-8">
-    <h5 class="text-tight blur-in line-clamp-2 text-xl font-semibold lg:text-2xl">
+    <h5
+      class="text-tight blur-in line-clamp-2 text-xl font-semibold lg:text-2xl"
+    >
       {{ project.post_title }}
     </h5>
     {% if preview %}
-      <p class="text-tight blur-in text-base text-black/60">
+      <p class="text-tight blur-in text-base text-black/80">
         {{ preview }}
       </p>
     {% endif %}

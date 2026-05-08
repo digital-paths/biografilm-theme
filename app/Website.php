@@ -204,6 +204,9 @@ class Website extends Site
             "footer_image_mobile",
             "option",
         );
+        $context["ragione_sociale"] = get_field("ragione_sociale", "option");
+        $context["footer_bottom_links"] = get_field("footer_bottom_links", "option") ?: [];
+        $context["footer_credits"] = get_field("footer_credits", "option");
         $context["mapbox_token"] = get_field("mapbox_api_key", "option");
         $context["environment"] = $this->vite->environment;
 
@@ -1454,5 +1457,15 @@ class Website extends Site
             wp_redirect(get_post_type_archive_link("contents-drama"), 301);
             exit();
         }
+    }
+
+    #[Filter("wpseo_opengraph_image")]
+    public function fallback_og_image(string $image): string
+    {
+        if ($image) {
+            return $image;
+        }
+
+        return get_template_directory_uri() . '/assets/images/fallback-img.jpg';
     }
 }

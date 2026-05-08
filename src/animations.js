@@ -242,4 +242,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   initBlurEffects();
+
+  // Images (e.g. footer image) load after DOMContentLoaded and make the page
+  // taller than GSAP's initial measurement. Refresh once everything is loaded
+  // so the scroll distance includes the full content height.
+  window.addEventListener("load", () => ScrollTrigger.refresh());
 });

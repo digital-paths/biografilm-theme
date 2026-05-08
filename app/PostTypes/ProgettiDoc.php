@@ -80,7 +80,7 @@ class ProgettiDoc extends \Timber\Post
                             "field_progetti_doc_altri_registi_nome",
                         ),
                     ]),
-                Text::make("Titolo alternativo", "titolo_alternativo"),
+                Text::make("Titolo aggiuntivo / Additional title", "titolo_alternativo"),
                 Repeater::make("Altri titoli alternativi", "altri_titoli_alternativi")
                     ->layout("row")
                     ->key("field_progetti_doc_altri_titoli_alternativi")
@@ -110,7 +110,7 @@ class ProgettiDoc extends \Timber\Post
                     ->appearance("multi_select")
                     ->create(true)
                     ->save(true),
-                Taxonomy::make("Genere", "genere")
+                Taxonomy::make("Formato / Format", "genere")
                     ->taxonomy("pd-genere")
                     ->appearance("select")
                     ->create(true)

@@ -1,46 +1,180 @@
-<footer class="">
-  <div class="bg-red mt-30 flex w-full flex-col xl:flex-row">
-    {% if footer_image %}
-      {% set fp =
-        function("get_post_meta", footer_image.ID, "focalpoint", true)
-      %}
-      {% set fp_mobile = footer_image_mobile
-        ? function("get_post_meta", footer_image_mobile.ID, "focalpoint", true)
-        : null
-      %}
-      {% set fp_style = fp
-        ? "object-position: " ~ ((fp.left * 100)|round) ~ "% "
-          ~ ((fp.top * 100)|round)
-          ~ "%;"
-        : null
-      %}
-      {% set fp_mobile_style = fp_mobile
-        ? "object-position: " ~ ((fp_mobile.left * 100)|round) ~ "% "
-          ~ ((fp_mobile.top * 100)|round)
-          ~ "%;"
-        : null
-      %}
-      <div class="h-120 w-1/2 overflow-hidden">
-        <img
-          src="{{ footer_image.url }}"
-          alt="{{ footer_image.alt }}"
-          class="h-full w-full object-cover {{
-          footer_image_mobile
-            ? "hidden md:block"
-            : ""
-          }}"
-          style="{{ fp_style }}"
-        />
-        {% if footer_image_mobile %}
-          <img
-            src="{{ footer_image_mobile.url }}"
-            alt="{{ footer_image_mobile.alt }}"
-            class="h-full w-full object-cover md:hidden"
-            style="{{ fp_mobile_style }}"
-          />
+<footer class="h-full border-b">
+  <!-- Newsletter -->
+  {{ include("parts/newsletter-block.twig") }}
+  <!-- Logo + Submenu -->
+  <div class="border-stroke border-stroke border-b bg-white">
+    <div class="grid grid-cols-3">
+      <div
+        class="border-stroke col-span-3 flex flex-col items-start justify-start gap-6 border-r border-b px-6 py-10 xl:col-span-1 xl:border-b-0 xl:px-10"
+      >
+        {{
+          include("views/svgs/logo/logo-biografilm-black.svg")|attr({
+            class: "w-1/2 h-auto xl:max-w-100 max-w-60 w-[153px]"
+          })
+        }}
+        {% if ragione_sociale %}
+          <div class="prose text-base text-black">
+            {{ ragione_sociale }}
+          </div>
         {% endif %}
       </div>
-    {% endif %}
-    <div class="bg-red w-1/2"></div>
+      {% if menu_submenu %}
+        <div class="col-span-3 px-6 py-10 xl:col-span-2 xl:px-10">
+          <nav
+            class="grid grid-cols-2 gap-x-8 gap-y-8 md:grid-cols-3 xl:flex xl:flex-wrap xl:justify-between"
+          >
+            {% for item in menu_submenu.items %}
+              <div class="flex flex-col gap-3">
+                {% if item.url == "#no-link" %}
+                  <span
+                    class="text-tight w-fit text-base leading-[125%] font-semibold text-black"
+                  >
+                    {{ item.title }}
+                  </span>
+                {% else %}
+                  <a
+                    href="{{ item.url }}"
+                    class="text-tight link-underline w-fit text-base leading-[125%] font-semibold text-black [&::after]:-bottom-0.5"
+                  >
+                    {{ item.title }}
+                  </a>
+                {% endif %}
+                {% if item.children %}
+                  <ul class="flex flex-col gap-2">
+                    {% for child in item.children %}
+                      <li>
+                        {% if child.url == "#no-link" %}
+                          <span
+                            class="text-tight w-fit text-sm font-normal text-black/80"
+                          >
+                            {{ child.title }}
+                          </span>
+                        {% else %}
+                          <a
+                            href="{{ child.url }}"
+                            class="text-tight link-underline w-fit text-sm font-normal text-black/80 [--link-underline-height:1px] [&::after]:-bottom-0.5"
+                          >
+                            {{ child.title }}
+                          </a>
+                        {% endif %}
+                      </li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </nav>
+        </div>
+      {% endif %}
+    </div>
   </div>
+  <!-- Section Menus -->
+  <div class="border-stroke bg-white xl:border-b">
+    <div class="grid grid-cols-3">
+      {% set section_labels = [
+        "Biografilm Festival",
+        "Bio to B — Industry Days",
+        "Biografilm Campus"
+      ] %}
+      {% set section_urls = [
+        nav_urls.festival,
+        nav_urls.industry,
+        nav_urls.campus
+      ] %}
+      {% for menu in [menu_festival, menu_industry, menu_campus] %}
+        {% if menu %}
+          {% set section_url = section_urls[loop.index0] %}
+          {% set section_label = section_labels[loop.index0] %}
+          <div
+            class="border-stroke col-span-3 flex flex-col gap-8 border-b px-6 py-10 xl:col-span-1 xl:border-b-0 xl:px-10 {{
+            not loop.last
+              ? "border-r"
+              : ""
+            }}"
+          >
+            <a
+              href="{{ section_url }}"
+              class="text-tight link-underline w-fit text-base font-semibold tracking-wider text-black uppercase [&::after]:-bottom-0.5"
+            >
+              {{ section_label }}
+            </a>
+            <div
+              class="grid grid-cols-2 gap-x-8 gap-y-8 md:grid-cols-3 xl:flex xl:flex-col xl:gap-8"
+            >
+              {% for item in menu.items %}
+                <div class="flex flex-col gap-3">
+                  {% if item.url == "#no-link" %}
+                    <span
+                      class="text-tight w-fit text-base leading-[125%] font-semibold text-black"
+                    >
+                      {{ item.title }}
+                    </span>
+                  {% else %}
+                    <a
+                      href="{{ item.url }}"
+                      class="text-tight link-underline w-fit text-base leading-[125%] font-semibold text-black [&::after]:-bottom-0.5"
+                    >
+                      {{ item.title }}
+                    </a>
+                  {% endif %}
+                  {% if item.children %}
+                    <ul class="flex flex-col gap-2">
+                      {% for child in item.children %}
+                        <li>
+                          {% if child.url == "#no-link" %}
+                            <span
+                              class="text-tight w-fit text-sm font-normal text-black/80"
+                            >
+                              {{ child.title }}
+                            </span>
+                          {% else %}
+                            <a
+                              href="{{ child.url }}"
+                              class="text-tight link-underline w-fit text-sm font-normal text-black/80 [--link-underline-height:1px] [&::after]:-bottom-0.5"
+                            >
+                              {{ child.title }}
+                            </a>
+                          {% endif %}
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+  <!-- Bottom Links -->
+  <div
+    class="flex flex-col items-center justify-between gap-8 bg-white px-6 py-10 xl:flex-row xl:px-10"
+  >
+    <div
+      class="grid w-full grid-cols-2 items-start justify-start gap-x-8 gap-y-3 md:grid-cols-3 xl:flex xl:w-fit xl:flex-wrap xl:justify-between xl:gap-8"
+    >
+      {% for row in footer_bottom_links %}
+        {% if row.link %}
+          <a
+            href="{{ row.link.url }}"
+            class="text-tight link-underline w-fit text-sm font-normal text-black/80 [--link-underline-height:1px] [&::after]:-bottom-0.5"
+            {{ row.link.target ? 'target="' ~ row.link.target ~ '"' }}
+          >
+            {{ row.link.title }}
+          </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+    {% if footer_credits %}
+      <div
+        class="prose prose-sm w-full text-sm text-black/80 xl:w-fit [&_a]:text-black/80 [&_a]:underline-offset-2 [&_p]:m-0"
+      >
+        {{ footer_credits }}
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Bottom Spacer -->
+  <div class="h-26 w-full bg-white"></div>
 </footer>

@@ -27,6 +27,12 @@ return [
             require get_stylesheet_directory() .
                 "/views/components/partners-displayer/partners-displayer.php",
         ),
+    Layout::make("Logos Displayer", "logos_displayer")
+        ->layout("block")
+        ->fields(
+            require get_stylesheet_directory() .
+                "/views/components/logos-displayer/logos-displayer.php",
+        ),
     Layout::make("Highlight Card", "highlight_card")
         ->layout("block")
         ->fields(

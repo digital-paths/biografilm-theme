@@ -2,9 +2,12 @@
 {% set permalink = function("get_permalink", project_id) %}
 {% set post_type = function("get_post_type", project_id) %}
 {% set badge_tax = post_type == "progetti-drama" ? "pdr-badge" : "pd-badge" %}
-{% set genere_tax = post_type == "progetti-drama" ? "pdr-genere" : "pd-genere" %}
+{% set genere_tax = post_type == "progetti-drama" ? "pdr-genere" : "pd-genere"
+%}
 {% set badges = function("wp_get_post_terms", project_id, badge_tax) %}
-{% set image_url = function("get_the_post_thumbnail_url", project_id, "large") %}
+{% set image_url =
+  function("get_the_post_thumbnail_url", project_id, "large")
+%}
 {% set thumb_id = function("get_post_thumbnail_id", project_id) %}
 {% set fp = thumb_id
   ? function("get_post_meta", thumb_id, "focalpoint", true)
@@ -23,10 +26,16 @@
   {% set durata = function("get_field", "durata", project_id) %}
   {% set anno = function("get_field", "anno", project_id) %}
   {% set genere = function("wp_get_post_terms", project_id, genere_tax)[0] %}
-  {% if regista %}{% set preview_parts = preview_parts|merge([regista]) %}{% endif %}
-  {% if durata %}{% set preview_parts = preview_parts|merge([durata]) %}{% endif %}
+  {% if regista %}{% set preview_parts =
+    preview_parts|merge([regista])
+  %}{% endif %}
+  {% if durata %}{% set preview_parts =
+    preview_parts|merge([durata])
+  %}{% endif %}
   {% if anno %}{% set preview_parts = preview_parts|merge([anno]) %}{% endif %}
-  {% if genere %}{% set preview_parts = preview_parts|merge([genere.name]) %}{% endif %}
+  {% if genere %}{% set preview_parts =
+    preview_parts|merge([genere.name])
+  %}{% endif %}
   {% set preview = preview_parts|join(" / ") %}
 {% else %}
   {% set preview = preview_raw %}
@@ -34,9 +43,11 @@
 
 <a
   href="{{ permalink }}"
-  class="group relative col-span-1 flex flex-col {{ no_border ? '' : 'border-stroke border-b' }} {{
-  extra_class
-  }}"
+  class="group relative col-span-1 flex flex-col {{
+  no_border
+    ? ""
+    : "border-stroke border-b"
+  }} {{ extra_class }}"
 >
   <div
     class="overlay-blur overlay absolute z-30 h-full w-full bg-transparent backdrop-blur-[50px]"
@@ -72,13 +83,17 @@
     />
   </div>
   <div
-    class="flex flex-1 flex-col gap-3 px-6 py-10 {{ inner_class is defined ? inner_class : "border-l-stroke border-l" }}"
+    class="flex flex-1 flex-col gap-3 px-6 py-10 {{
+    inner_class is defined
+      ? inner_class
+      : "border-l-stroke border-l"
+    }}"
   >
     <h5 class="text-tight blur-in line-clamp-2 text-2xl font-semibold">
       {{ project.post_title }}
     </h5>
     {% if preview %}
-      <p class="text-tight blur-in line-clamp-2 text-base text-black/60">
+      <p class="text-tight blur-in line-clamp-2 text-base text-black/80">
         {{ preview }}
       </p>
     {% endif %}

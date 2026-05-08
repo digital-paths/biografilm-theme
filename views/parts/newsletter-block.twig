@@ -1,0 +1,44 @@
+<div class="bg-red mt-30 flex w-full flex-col flex-col-reverse xl:flex-row">
+  {% if footer_image %}
+    {% set fp =
+      function("get_post_meta", footer_image.ID, "focalpoint", true)
+    %}
+    {% set fp_mobile = footer_image_mobile
+      ? function("get_post_meta", footer_image_mobile.ID, "focalpoint", true)
+      : null
+    %}
+    {% set fp_style = fp
+      ? "object-position: " ~ ((fp.left * 100)|round) ~ "% "
+        ~ ((fp.top * 100)|round)
+        ~ "%;"
+      : null
+    %}
+    {% set fp_mobile_style = fp_mobile
+      ? "object-position: " ~ ((fp_mobile.left * 100)|round) ~ "% "
+        ~ ((fp_mobile.top * 100)|round)
+        ~ "%;"
+      : null
+    %}
+    <div class="h-140 overflow-hidden xl:h-120 xl:w-1/2">
+      <img
+        src="{{ footer_image.url }}"
+        alt="{{ footer_image.alt }}"
+        class="h-full w-full object-cover {{
+        footer_image_mobile
+          ? "hidden md:block"
+          : ""
+        }}"
+        style="{{ fp_style }}"
+      />
+      {% if footer_image_mobile %}
+        <img
+          src="{{ footer_image_mobile.url }}"
+          alt="{{ footer_image_mobile.alt }}"
+          class="h-full w-full object-cover md:hidden"
+          style="{{ fp_mobile_style }}"
+        />
+      {% endif %}
+    </div>
+  {% endif %}
+  <div class="bg-red xl:w-1/2"></div>
+</div>

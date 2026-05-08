@@ -34,22 +34,28 @@
         window.mapboxKey = "{{ mapbox_token }}"
       </script>
       <div
-        class="locations-map border-stroke relative aspect-3/4 md:aspect-10/5 w-full border-b"
+        class="locations-map border-stroke relative aspect-3/4 w-full border-b md:aspect-10/5"
         x-data="LocationsMap({{ map_locations|json_encode|e("html_attr") }})"
         x-ref="map"
         x-init="init()"
       >
-        <div class="border-stroke absolute right-4 bottom-4 z-10 flex flex-col border">
+        <div
+          class="border-stroke absolute right-4 bottom-4 z-10 flex flex-col border"
+        >
           <button
             @click="zoomIn()"
             class="border-stroke flex h-10 w-10 cursor-pointer items-center justify-center border-b bg-white text-xl font-semibold text-black transition-colors hover:bg-zinc-100"
             aria-label="Zoom in"
-          >+</button>
+          >
+            +
+          </button>
           <button
             @click="zoomOut()"
             class="flex h-10 w-10 cursor-pointer items-center justify-center bg-white text-xl font-semibold text-black transition-colors hover:bg-zinc-100"
             aria-label="Zoom out"
-          >−</button>
+          >
+            −
+          </button>
         </div>
       </div>
     {% endif %}
@@ -65,7 +71,7 @@
           </h2>
         {% endif %}
         {% if component.subtitle %}
-          <p class="text-tight blur-in text-xl leading-[150%] text-black/70">
+          <p class="text-tight blur-in text-xl leading-[150%] text-black/80">
             {{ component.subtitle }}
           </p>
         {% endif %}

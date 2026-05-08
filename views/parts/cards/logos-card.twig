@@ -1,0 +1,61 @@
+{% set image = item.image %}
+{% set link = item.link %}
+
+{% if link %}
+  <a
+    href="{{ link.url }}"
+    target="{{ link.target ? : "_self" }}"
+    rel="noopener noreferrer"
+    class="group border-stroke col-span-1 flex flex-col border-b"
+  >
+    <div class="border-l-stroke flex flex-1 flex-col border-l px-6 py-10">
+      <div class="flex h-32 items-center">
+        {% if image %}
+          <img
+            src="{{ image.url }}"
+            alt="{{ image.alt }}"
+            class="max-h-full w-auto origin-left scale-90 object-contain object-left transition-all duration-300 group-hover:scale-100"
+          />
+        {% endif %}
+      </div>
+      <div class="flex flex-col pt-8">
+        {% if item.title %}
+          <h5 class="text-tight blur-in line-clamp-2 text-2xl font-semibold">
+            {{ item.title }}
+          </h5>
+        {% endif %}
+        {% if item.subtitle %}
+          <p class="text-tight blur-in mt-2 line-clamp-3 text-base">
+            {{ item.subtitle }}
+          </p>
+        {% endif %}
+      </div>
+    </div>
+  </a>
+{% else %}
+  <div class="border-stroke col-span-1 flex flex-col border-b">
+    <div class="border-l-stroke flex flex-1 flex-col border-l px-6 py-10">
+      <div class="flex h-32 items-center">
+        {% if image %}
+          <img
+            src="{{ image.url }}"
+            alt="{{ image.alt }}"
+            class="max-h-full w-auto origin-left object-contain object-left"
+          />
+        {% endif %}
+      </div>
+      <div class="flex flex-col pt-8">
+        {% if item.title %}
+          <h5 class="text-tight blur-in line-clamp-2 text-2xl font-semibold">
+            {{ item.title }}
+          </h5>
+        {% endif %}
+        {% if item.subtitle %}
+          <p class="text-tight blur-in mt-2 line-clamp-3 text-base">
+            {{ item.subtitle }}
+          </p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endif %}

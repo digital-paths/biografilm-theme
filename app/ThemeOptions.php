@@ -7,6 +7,8 @@ use Extended\ACF\Fields\Text;
 use Extended\ACF\Fields\Textarea;
 use Extended\ACF\Fields\Group;
 use Extended\ACF\Fields\WYSIWYGEditor;
+use Extended\ACF\Fields\Repeater;
+use Extended\ACF\Fields\Link;
 use Extended\ACF\Location;
 use Extended\ACF\Fields\Tab;
 use Extended\ACF\Fields\Password;
@@ -40,9 +42,9 @@ class ThemeOptions
 
         acf_add_options_sub_page([
             "parent_slug" => "theme-options",
-            "menu_slug"   => "theme-archivi",
-            "menu_title"  => "Archivi",
-            "page_title"  => "Archivi",
+            "menu_slug" => "theme-archivi",
+            "menu_title" => "Archivi",
+            "page_title" => "Archivi",
         ]);
     }
 
@@ -60,20 +62,34 @@ class ThemeOptions
                         "Enable this to show a \"Coming Soon\" mode on the website to everyone except for logged in admins.",
                     ),
                 Tab::make("Mapbox"),
-                Password::make("Mapbox API Key", "mapbox_api_key")
-                    ->helperText("Public access token from account.mapbox.com"),
+                Password::make("Mapbox API Key", "mapbox_api_key")->helperText(
+                    "Public access token from account.mapbox.com",
+                ),
                 Tab::make("Header"),
-                TrueFalse::make("Mostra data e luogo", "header_show_date_location")
-                    ->default(true),
-                Text::make("Data", "header_date")
-                    ->default("5 — 15.06.2026"),
-                Text::make("Luogo", "header_location")
-                    ->default("Bologna"),
+                TrueFalse::make(
+                    "Mostra data e luogo",
+                    "header_show_date_location",
+                )->default(true),
+                Text::make("Data", "header_date")->default("5 — 15.06.2026"),
+                Text::make("Luogo", "header_location")->default("Bologna"),
                 Tab::make("Footer"),
-                Image::make("Immagine footer", "footer_image")
-                    ->format("array"),
-                Image::make("Immagine footer mobile", "footer_image_mobile")
-                    ->format("array"),
+                Image::make("Immagine footer", "footer_image")->format("array"),
+                Image::make(
+                    "Immagine footer mobile",
+                    "footer_image_mobile",
+                )->format("array"),
+                WYSIWYGEditor::make("Ragione sociale", "ragione_sociale")
+                    ->disableMediaUpload()
+                    ->tabs("all")
+                    ->toolbar("basic"),
+                Repeater::make("Link in basso", "footer_bottom_links")
+                    ->fields([
+                        Link::make("Link", "link"),
+                    ]),
+                WYSIWYGEditor::make("Crediti", "footer_credits")
+                    ->disableMediaUpload()
+                    ->tabs("all")
+                    ->toolbar("basic"),
             ],
             "style" => "",
             "location" => [Location::where("options_page", "theme-archivi")],
