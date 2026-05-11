@@ -54,9 +54,14 @@
 
 /* Select arrow */
 .gform_wrapper select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%231f1f1f' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m5 7.5 5 5 5-5'/%3E%3C/svg%3E") !important;
-  background-position: right 0 center !important;
-  @apply cursor-pointer! bg-no-repeat! pr-8!;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3E%3Cpath stroke='%23d2d2d2' stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='m4 8 8 8 8-8'/%3E%3C/svg%3E") !important;
+  background-position: right 10 center !important;
+  background-size: auto 1rem !important;
+  @apply cursor-pointer! bg-no-repeat!;
+}
+
+.gform_wrapper select:focus {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3E%3Cpath stroke='%231f1f1f' stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='m4 8 8 8 8-8'/%3E%3C/svg%3E") !important;
 }
 
 /* Checkbox & radio */
@@ -155,4 +160,48 @@
 
 .gform_validation_errors h2 {
   @apply text-xl! font-normal!;
+}
+
+.newsletter-field {
+  @apply text-white!;
+}
+
+.newsletter-field label {
+  @apply text-white!;
+}
+
+.newsletter-field input[type="email"] {
+  @apply border-stroke! block! min-h-[3.5rem]! border! bg-transparent! px-4! py-0! font-sans! text-lg! text-white! shadow-none! transition-colors! duration-150! outline-none! focus:border-white! focus:ring-0! focus:outline-none! focus-visible:ring-0! focus-visible:outline-none! active:border-white!;
+  appearance: none !important;
+}
+
+.newsletter-field select {
+  @apply border-stroke! block! min-h-[3.5rem]! border! bg-transparent! px-4! py-0! font-sans! text-lg! text-white! shadow-none! transition-colors! duration-150! outline-none! focus:border-white! focus:ring-0! focus:outline-none! focus-visible:border-white! focus-visible:ring-0! focus-visible:outline-none! active:border-white!;
+  appearance: none !important;
+}
+
+.newsletter-field input::placeholder,
+.newsletter-field select::placeholder {
+  color: white !important;
+}
+
+.gform_wrapper .newsletter-field select:focus {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3E%3Cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='m4 8 8 8 8-8'/%3E%3C/svg%3E") !important;
+  border-color: white !important;
+}
+
+.gw-newsletter .gform_fields {
+  @apply mb-6! flex! flex-col! gap-6! xl:flex-row!;
+}
+
+.gw-newsletter .gform_fields div {
+  @apply flex-1!;
+}
+
+.gw-newsletter input[type="submit"] {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3E%3Cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 1rem center !important;
+  background-size: auto 1.25rem !important;
+  @apply text-tight! hover:bg-red-hover! active:bg-red-active! flex! min-h-[3.5rem]! items-center! justify-between! rounded-none! bg-black/20! px-4! py-0! text-left! text-xl! leading-[130%]!;
 }

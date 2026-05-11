@@ -13,6 +13,7 @@ use Extended\ACF\Location;
 use Extended\ACF\Fields\Tab;
 use Extended\ACF\Fields\Password;
 use Extended\ACF\Fields\TrueFalse;
+use Extended\ACF\Fields\URL;
 
 use Yard\Hook\Action;
 
@@ -43,8 +44,8 @@ class ThemeOptions
         acf_add_options_sub_page([
             "parent_slug" => "theme-options",
             "menu_slug" => "theme-archivi",
-            "menu_title" => "Archivi",
-            "page_title" => "Archivi",
+            "menu_title" => "Impostazioni",
+            "page_title" => "Impostazioni",
         ]);
     }
 
@@ -72,6 +73,18 @@ class ThemeOptions
                 )->default(true),
                 Text::make("Data", "header_date")->default("5 — 15.06.2026"),
                 Text::make("Luogo", "header_location")->default("Bologna"),
+                Tab::make("Social"),
+                URL::make("Instagram", "social_instagram"),
+                URL::make("Facebook", "social_facebook"),
+                URL::make("YouTube", "social_youtube"),
+                URL::make("TikTok", "social_tiktok"),
+                URL::make("X", "social_x"),
+                URL::make("LinkedIn", "social_linkedin"),
+                URL::make("Telegram", "social_telegram"),
+                Tab::make("Newsletter"),
+                Text::make("Titolo newsletter", "newsletter_title")->default("Vuoi restare aggiornato?"),
+                Text::make("Testo social media", "newsletter_social_text")->default("Segui Biografilm sui social"),
+                Text::make("Shortcode form", "newsletter_form_shortcode")->default('[gravityform id="3" title="false"]'),
                 Tab::make("Footer"),
                 Image::make("Immagine footer", "footer_image")->format("array"),
                 Image::make(
@@ -92,6 +105,7 @@ class ThemeOptions
                     ->toolbar("basic"),
             ],
             "style" => "",
+            "menu_order" => 0,
             "location" => [Location::where("options_page", "theme-archivi")],
         ]);
     }

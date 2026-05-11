@@ -19,7 +19,7 @@
         ~ "%;"
       : null
     %}
-    <div class="h-140 overflow-hidden xl:h-120 xl:w-1/2">
+    <div class="min-h-140 overflow-hidden xl:min-h-100 xl:w-1/2">
       <img
         src="{{ footer_image.url }}"
         alt="{{ footer_image.alt }}"
@@ -40,5 +40,42 @@
       {% endif %}
     </div>
   {% endif %}
-  <div class="bg-red xl:w-1/2"></div>
+  <div class="bg-red flex flex-col gap-12 px-6 py-10 xl:w-1/2 xl:p-10">
+    <div class="flex flex-col gap-6">
+      <h6 class="heading-h6 font-semibold text-white">
+        {{ newsletter_title }}
+      </h6>
+      {{ function("do_shortcode", newsletter_form_shortcode) }}
+    </div>
+    <div
+      class="flex flex-col items-start justify-between gap-y-6 md:flex-row md:items-center"
+    >
+      <p class="text-xl font-semibold text-white">
+        {{ newsletter_social_text }}
+      </p>
+      <div class="flex flex-wrap gap-4">
+        {% set socials = [
+          { url: social_instagram, icon: "icons/brands/instagram.svg" },
+          { url: social_facebook, icon: "icons/brands/facebook.svg" },
+          { url: social_youtube, icon: "icons/brands/youtube.svg" },
+          { url: social_tiktok, icon: "icons/brands/tiktok.svg" },
+          { url: social_x, icon: "icons/brands/x.svg" },
+          { url: social_linkedin, icon: "icons/brands/linkedin.svg" },
+          { url: social_telegram, icon: "icons/brands/telegram.svg" }
+        ] %}
+        {% for social in socials %}
+          {% if social.url %}
+            <a
+              href="{{ social.url }}"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-white transition-opacity hover:opacity-80"
+            >
+              {{ include(social.icon)|attr({ class: "size-7" }) }}
+            </a>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
 </div>

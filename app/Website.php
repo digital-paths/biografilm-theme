@@ -207,6 +207,16 @@ class Website extends Site
         $context["ragione_sociale"] = get_field("ragione_sociale", "option");
         $context["footer_bottom_links"] = get_field("footer_bottom_links", "option") ?: [];
         $context["footer_credits"] = get_field("footer_credits", "option");
+        $context["social_instagram"] = get_field("social_instagram", "option");
+        $context["social_facebook"] = get_field("social_facebook", "option");
+        $context["social_youtube"] = get_field("social_youtube", "option");
+        $context["social_tiktok"] = get_field("social_tiktok", "option");
+        $context["social_x"] = get_field("social_x", "option");
+        $context["social_linkedin"] = get_field("social_linkedin", "option");
+        $context["social_telegram"] = get_field("social_telegram", "option");
+        $context["newsletter_title"] = get_field("newsletter_title", "option");
+        $context["newsletter_social_text"] = get_field("newsletter_social_text", "option");
+        $context["newsletter_form_shortcode"] = get_field("newsletter_form_shortcode", "option");
         $context["mapbox_token"] = get_field("mapbox_api_key", "option");
         $context["environment"] = $this->vite->environment;
 

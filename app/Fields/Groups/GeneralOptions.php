@@ -11,6 +11,7 @@ use Extended\ACF\Fields\Link;
 
 register_extended_field_group([
     "title" => "Archivi",
+    "menu_order" => 1,
     "location" => [Location::where("options_page", "theme-archivi")],
     "fields" => [
         Tab::make("Progetti")->placement("left"),
