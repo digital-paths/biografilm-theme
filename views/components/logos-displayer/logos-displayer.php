@@ -4,7 +4,7 @@ use Extended\ACF\Fields\Image;
 use Extended\ACF\Fields\Link;
 use Extended\ACF\Fields\Repeater;
 use Extended\ACF\Fields\Text;
-use Extended\ACF\Fields\TextArea;
+use Extended\ACF\Fields\Textarea;
 use Extended\ACF\Fields\TrueFalse;
 
 return [
@@ -17,7 +17,7 @@ return [
         ->fields([
             Image::make("Immagine", "image")->format("array"),
             Text::make("Titolo", "title"),
-            TextArea::make("Sottotitolo", "subtitle"),
+            Textarea::make("Sottotitolo", "subtitle"),
             Link::make("Link", "link")->format("array"),
         ]),
 ];
