@@ -10,5 +10,8 @@
       ?? "display-h1-primary"
     %}
     <h1 class="{{ title_class }}">{{ hero_title }}</h1>
+    {% if hero_subtitle %}
+      <p class="text-tight text-xl text-black/60">{{ hero_subtitle }}</p>
+    {% endif %}
   </div>
 </div>

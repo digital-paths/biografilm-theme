@@ -264,7 +264,11 @@ class Website extends Site
 
         // Build breadcrumbs from page hierarchy
         $breadcrumbs = [];
-        if (is_404()) {
+        if (is_search()) {
+            $crumb_home = function_exists("pll_home_url") ? pll_home_url() : home_url("/");
+            $breadcrumbs[] = ["url" => $crumb_home, "title" => "Biografilm"];
+            $breadcrumbs[] = ["url" => "", "title" => function_exists("pll__") ? pll__("Risultati") : "Risultati"];
+        } elseif (is_404()) {
             $crumb_home = function_exists("pll_home_url") ? pll_home_url() : home_url("/");
             $breadcrumbs[] = ["url" => $crumb_home, "title" => "Biografilm"];
             $breadcrumbs[] = ["url" => "", "title" => "404"];

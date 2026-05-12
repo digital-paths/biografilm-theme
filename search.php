@@ -15,8 +15,13 @@ $templates = [
     "templates/index.twig",
 ];
 
+global $wp_query;
+
 $context = Timber::context([
-    "title" => "Search results for " . get_search_query(),
+    "title"        => get_search_query(),
+    "posts"        => Timber::get_posts(),
+    "search_query" => get_search_query(),
+    "found_posts"  => $wp_query->found_posts,
 ]);
 
 Timber::render($templates, $context);

@@ -99,6 +99,13 @@ class Translations
         "Beneficiari" => ["en" => "Beneficiaries"],
         "Restituzione finale" => ["en" => "Final presentation"],
 
+        // Search results
+        "Risultati" => ["en" => "Results"],
+        "Tipologia risultato" => ["en" => "Result type"],
+        "risultati trovati per la ricerca" => ["en" => "results found for the search"],
+        "Nessun risultato trovato." => ["en" => "No results found."],
+        "Pagina" => ["en" => "Page"],
+
         // 404
         "Pagina non trovata" => ["en" => "Page not found"],
         "La pagina che cerchi non esiste o è stata spostata." => ["en" => "The page you're looking for doesn't exist or has been moved."],

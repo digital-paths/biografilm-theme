@@ -212,6 +212,17 @@
     }}
   {% endif %}
 
+  {% set page_components = function("get_field", "page_components", post.ID) %}
+  {% for component in page_components %}
+    {% set layout = component.acf_fc_layout|replace({ "_": "-" }) %}
+    {{
+      include(
+        "components/" ~ layout ~ "/" ~ layout ~ ".twig",
+        { component: component }
+      )
+    }}
+  {% endfor %}
+
   {% include "parts/cta-bottom.twig" with {
     cta_title: function("get_field", "progetti_cta_titolo", "option"),
     cta_desc: function("get_field", "progetti_cta_descrizione", "option"),
