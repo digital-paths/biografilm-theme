@@ -13,7 +13,7 @@
       }}"
     >
       {% if component.title %}
-        <h2 class="{{ component.title_class ? : "display-h2" }} blur-in">
+        <h2 class="{{ component.title_style ? component.title_style : "display-h2" }} blur-in">
           {{ component.title }}
         </h2>
       {% endif %}
@@ -69,8 +69,8 @@
                 </h6>
               {% endif %}
               {% if item.description %}
-                <div class="blur-in text-xl text-black/80">
-                  {{ item.description|striptags }}
+                <div class="prose blur-in max-w-none text-xl text-black/80 [&_h1]:heading-h3 [&_h2]:heading-h4 [&_h3]:heading-h5 [&_h4]:heading-h6 [&_h1]:font-semibold [&_h2]:font-semibold [&_h3]:font-semibold [&_h4]:font-semibold [&_h1]:text-black [&_h2]:text-black [&_h3]:text-black [&_h4]:text-black">
+                  {{ item.description }}
                 </div>
               {% endif %}
             </div>

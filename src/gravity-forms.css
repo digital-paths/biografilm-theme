@@ -205,3 +205,33 @@
   background-size: auto 1.25rem !important;
   @apply text-tight! hover:bg-red-hover! active:bg-red-active! flex! min-h-[3.5rem]! items-center! justify-between! rounded-none! bg-black/20! px-4! py-0! text-left! text-xl! leading-[130%]!;
 }
+
+.gw-newsletter_wrapper .gform_validation_errors {
+  @apply border-white/40! bg-white/10! rounded-none! text-white!;
+}
+
+.gw-newsletter_wrapper .gform_validation_errors h2 {
+  @apply text-white! font-semibold!;
+}
+
+.gw-newsletter_wrapper .gform-icon--circle-error {
+  background-color: white !important;
+}
+
+.gw-newsletter_wrapper .gform_confirmation_message {
+  @apply text-white!;
+}
+
+.gw-newsletter .gfield_validation_message {
+  @apply text-white/80! mt-1.5!;
+}
+
+.gw-newsletter .gfield_error input,
+.gw-newsletter .gfield_error select {
+  @apply border-white!;
+}
+
+.gw-newsletter .gfield_error .gfield_label,
+.gw-newsletter .gfield_error label {
+  @apply text-white!;
+}

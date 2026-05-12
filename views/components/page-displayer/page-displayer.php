@@ -4,6 +4,7 @@ use Extended\ACF\Fields\Group;
 use Extended\ACF\Fields\Image;
 use Extended\ACF\Fields\Link;
 use Extended\ACF\Fields\Repeater;
+use Extended\ACF\Fields\Select;
 use Extended\ACF\Fields\Tab;
 use Extended\ACF\Fields\Text;
 use Extended\ACF\Fields\TrueFalse;
@@ -30,6 +31,13 @@ return [
         ]),
 
     Tab::make("Stile"),
+    Select::make("Stile titolo", "title_style")
+        ->choices([
+            "display-h2" => "Grande",
+            "heading-h4" => "Medio",
+            "heading-h5" => "Piccolo",
+        ])
+        ->default("display-h2"),
     Group::make("Bordi", "borders_group")
         ->layout("row")
         ->fields([
