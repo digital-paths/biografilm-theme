@@ -1480,6 +1480,6 @@ class Website extends Site
             return $image;
         }
 
-        return get_template_directory_uri() . '/assets/images/fallback-img.jpg';
+        return get_template_directory_uri() . '/assets/images/share-img/share-img.png';
     }
 }
