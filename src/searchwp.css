@@ -1,0 +1,41 @@
+.searchwp-form {
+  width: 100%;
+
+  input.swp-input--search {
+    background-image: none !important;
+    padding-right: 0 !important;
+  }
+
+  .swp-input {
+    border: none;
+    outline: none;
+    box-shadow: none;
+    background-color: transparent;
+    width: 100%;
+    font-size: 1rem;
+    line-height: 112%;
+    letter-spacing: -0.02em;
+
+    &:focus {
+      border: none;
+      outline: none;
+      box-shadow: none;
+    }
+
+    &::placeholder {
+      color: var(--color-black);
+    }
+
+    &::-webkit-search-decoration,
+    &::-webkit-search-cancel-button,
+    &::-webkit-search-results-button,
+    &::-webkit-search-results-decoration {
+      display: none;
+    }
+  }
+
+  .swp-search-icon,
+  button[type="submit"] {
+    display: none;
+  }
+}
