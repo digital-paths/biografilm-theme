@@ -1,7 +1,7 @@
 {% extends "base.twig" %}
 
 {% block hero %}
-  {% set _archive_page = function("get_page_by_path", "sezioni") %}
+  {% set _archive_page = function("get_archive_page", "sezioni") %}
   {% if _archive_page and not function("get_field", "hide_hero", _archive_page.ID) %}
     {% set _hero_title = function("get_field", "hero_alt_title", _archive_page.ID) %}
     {% set _hero_style = function("get_field", "hero_title_style", _archive_page.ID) %}
@@ -73,7 +73,7 @@
     pagination: posts.pagination({ show_all: false, mid_size: 3, end_size: 2 })
   } %}
 
-  {% set _archive_page = function("get_page_by_path", "sezioni") %}
+  {% set _archive_page = function("get_archive_page", "sezioni") %}
   {% set components = _archive_page ? function("get_field", "archive_components", _archive_page.ID) : null %}
   {% for component in components %}
     {% set layout = component.acf_fc_layout|replace({ "_": "-" }) %}

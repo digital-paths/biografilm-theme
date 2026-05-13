@@ -1,7 +1,7 @@
 {% extends "base.twig" %}
 
 {% block hero %}
-  {% set _archive_page = function("get_page_by_path", "industry/bio-to-b-doc/contents") %}
+  {% set _archive_page = function("get_archive_page", "industry/bio-to-b-doc/contents") %}
   {% if _archive_page and not function("get_field", "hide_hero", _archive_page.ID) %}
     {% set _hero_title = function("get_field", "hero_alt_title", _archive_page.ID) %}
     {% set _hero_style = function("get_field", "hero_title_style", _archive_page.ID) %}
@@ -18,6 +18,6 @@
 {% endblock hero %}
 
 {% block content %}
-  {% set _archive_page = function("get_page_by_path", "industry/bio-to-b-doc/contents") %}
+  {% set _archive_page = function("get_archive_page", "industry/bio-to-b-doc/contents") %}
   {% include "parts/archive-contents.twig" with { archive_page: _archive_page } %}
 {% endblock content %}
