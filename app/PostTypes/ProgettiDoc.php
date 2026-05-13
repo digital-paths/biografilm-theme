@@ -80,13 +80,23 @@ class ProgettiDoc extends \Timber\Post
                             "field_progetti_doc_altri_registi_nome",
                         ),
                     ]),
-                Text::make("Titolo aggiuntivo / Additional title", "titolo_alternativo"),
-                Repeater::make("Altri titoli alternativi", "altri_titoli_alternativi")
+                Text::make(
+                    "Titolo aggiuntivo / Additional title",
+                    "titolo_alternativo",
+                ),
+                Repeater::make(
+                    "Altri titoli alternativi",
+                    "altri_titoli_alternativi",
+                )
                     ->layout("row")
                     ->key("field_progetti_doc_altri_titoli_alternativi")
-                    ->collapsed("field_progetti_doc_altri_titoli_alternativi_titolo")
+                    ->collapsed(
+                        "field_progetti_doc_altri_titoli_alternativi_titolo",
+                    )
                     ->fields([
-                        Text::make("Titolo", "titolo")->key("field_progetti_doc_altri_titoli_alternativi_titolo"),
+                        Text::make("Titolo", "titolo")->key(
+                            "field_progetti_doc_altri_titoli_alternativi_titolo",
+                        ),
                     ]),
                 Text::make("Durata", "durata"),
                 Number::make("Anno", "anno")
@@ -112,7 +122,7 @@ class ProgettiDoc extends \Timber\Post
                     ->save(true),
                 Taxonomy::make("Formato / Format", "genere")
                     ->taxonomy("pd-genere")
-                    ->appearance("select")
+                    ->appearance("multi_select")
                     ->create(true)
                     ->save(true),
                 Taxonomy::make("Badges", "badges")
@@ -144,7 +154,9 @@ class ProgettiDoc extends \Timber\Post
                 Repeater::make("Who's Coming", "whos_coming")
                     ->key("field_progetti_doc_whos_coming")
                     ->fields([
-                        Text::make("Titolo", "titolo")->key("field_progetti_doc_whos_coming_titolo"),
+                        Text::make("Titolo", "titolo")->key(
+                            "field_progetti_doc_whos_coming_titolo",
+                        ),
                         Relationship::make("Profili", "profili")
                             ->key("field_progetti_doc_whos_coming_profili")
                             ->postTypes(["whos-coming"])
