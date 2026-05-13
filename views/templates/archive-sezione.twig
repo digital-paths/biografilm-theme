@@ -1,12 +1,20 @@
 {% extends "base.twig" %}
 
 {% block hero %}
-  {{
-    include(
-      "components/hero/hero.twig",
-      { hero_title: function("pll__", "Sezioni"), hero_title_style: "primary" }
-    )
-  }}
+  {% set _archive_page = function("get_page_by_path", "sezioni") %}
+  {% if _archive_page and not function("get_field", "hide_hero", _archive_page.ID) %}
+    {% set _hero_title = function("get_field", "hero_alt_title", _archive_page.ID) %}
+    {% set _hero_style = function("get_field", "hero_title_style", _archive_page.ID) %}
+    {{
+      include(
+        "components/hero/hero.twig",
+        {
+          hero_title: _hero_title ?: _archive_page.post_title,
+          hero_title_style: _hero_style ?: "primary"
+        }
+      )
+    }}
+  {% endif %}
 {% endblock hero %}
 
 {% block content %}
@@ -65,7 +73,8 @@
     pagination: posts.pagination({ show_all: false, mid_size: 3, end_size: 2 })
   } %}
 
-  {% set components = function("get_field", "sezioni_components", "option") %}
+  {% set _archive_page = function("get_page_by_path", "sezioni") %}
+  {% set components = _archive_page ? function("get_field", "archive_components", _archive_page.ID) : null %}
   {% for component in components %}
     {% set layout = component.acf_fc_layout|replace({ "_": "-" }) %}
     {{

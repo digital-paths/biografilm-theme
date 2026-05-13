@@ -1,12 +1,8 @@
-{% set intro = function("get_field", intro_key, "option") %}
-{% if intro %}
-  {{
-    include(
-      "components/text-displayer/text-displayer.twig",
-      { component: intro }
-    )
-  }}
-{% endif %}
+{% set intro_components = archive_page ? function("get_field", "archive_intro", archive_page.ID) : null %}
+{% for component in intro_components %}
+  {% set layout = component.acf_fc_layout|replace({ "_": "-" }) %}
+  {{ include("components/" ~ layout ~ "/" ~ layout ~ ".twig", { component: component }) }}
+{% endfor %}
 
 <div class="facetwp-template">
   <div
@@ -50,13 +46,8 @@
   pagination: posts.pagination({ show_all: false, mid_size: 3, end_size: 2 })
 } %}
 
-{% set components = function("get_field", components_key, "option") %}
+{% set components = archive_page ? function("get_field", "archive_components", archive_page.ID) : null %}
 {% for component in components %}
   {% set layout = component.acf_fc_layout|replace({ "_": "-" }) %}
-  {{
-    include(
-      "components/" ~ layout ~ "/" ~ layout ~ ".twig",
-      { component: component }
-    )
-  }}
+  {{ include("components/" ~ layout ~ "/" ~ layout ~ ".twig", { component: component }) }}
 {% endfor %}

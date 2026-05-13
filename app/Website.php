@@ -1021,14 +1021,22 @@ class Website extends Site
             ? pll_home_url()
             : home_url("/");
         $context["home_url"] = $home_url;
+        $festival_link = get_field("header_link_festival", "option");
+        $industry_link = get_field("header_link_industry", "option");
+        $campus_link   = get_field("header_link_campus", "option");
         $context["nav_urls"] = [
-            "festival" => $home_url,
-            "industry" => $industry_page
+            "festival" => $festival_link["url"] ?? $home_url,
+            "industry" => $industry_link["url"] ?? ($industry_page
                 ? get_permalink($industry_page->ID)
-                : home_url("/industry/"),
-            "campus" => $campus_page
+                : home_url("/industry/")),
+            "campus"   => $campus_link["url"] ?? ($campus_page
                 ? get_permalink($campus_page->ID)
-                : home_url("/campus/"),
+                : home_url("/campus/")),
+        ];
+        $context["nav_labels"] = [
+            "festival" => ($festival_link["title"] ?? null) ?: "Festival",
+            "industry" => ($industry_link["title"] ?? null) ?: "Industry",
+            "campus"   => ($campus_link["title"] ?? null) ?: "Campus",
         ];
 
         return $context;

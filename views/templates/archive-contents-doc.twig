@@ -1,17 +1,23 @@
 {% extends "base.twig" %}
 
 {% block hero %}
-  {{
-    include(
-      "components/hero/hero.twig",
-      { hero_title: "Contents", hero_title_style: "primary" }
-    )
-  }}
+  {% set _archive_page = function("get_page_by_path", "industry/bio-to-b-doc/contents") %}
+  {% if _archive_page and not function("get_field", "hide_hero", _archive_page.ID) %}
+    {% set _hero_title = function("get_field", "hero_alt_title", _archive_page.ID) %}
+    {% set _hero_style = function("get_field", "hero_title_style", _archive_page.ID) %}
+    {{
+      include(
+        "components/hero/hero.twig",
+        {
+          hero_title: _hero_title ?: _archive_page.post_title,
+          hero_title_style: _hero_style ?: "primary"
+        }
+      )
+    }}
+  {% endif %}
 {% endblock hero %}
 
 {% block content %}
-  {% include "parts/archive-contents.twig" with {
-    intro_key: "contents_doc_intro",
-    components_key: "contents_doc_components"
-  } %}
+  {% set _archive_page = function("get_page_by_path", "industry/bio-to-b-doc/contents") %}
+  {% include "parts/archive-contents.twig" with { archive_page: _archive_page } %}
 {% endblock content %}

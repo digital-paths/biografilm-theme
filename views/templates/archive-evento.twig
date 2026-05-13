@@ -1,15 +1,20 @@
 {% extends "base.twig" %}
 
 {% block hero %}
-  {{
-    include(
-      "components/hero/hero.twig",
-      {
-        hero_title: function("pll__", "Eventi Campus"),
-        hero_title_style: "primary"
-      }
-    )
-  }}
+  {% set _archive_page = function("get_page_by_path", "campus/eventi") %}
+  {% if _archive_page and not function("get_field", "hide_hero", _archive_page.ID) %}
+    {% set _hero_title = function("get_field", "hero_alt_title", _archive_page.ID) %}
+    {% set _hero_style = function("get_field", "hero_title_style", _archive_page.ID) %}
+    {{
+      include(
+        "components/hero/hero.twig",
+        {
+          hero_title: _hero_title ?: _archive_page.post_title,
+          hero_title_style: _hero_style ?: "primary"
+        }
+      )
+    }}
+  {% endif %}
 {% endblock hero %}
 
 {% block content %}
@@ -19,22 +24,12 @@
     x-effect="document.body.style.overflow = filtersOpen ? 'hidden' : ''"
     @keydown.escape.window="filtersOpen = false"
   >
-    {% set intro_title = function("get_field", "eventi_titolo", "option") %}
-    {% set intro_desc = function("get_field", "eventi_descrizione", "option") %}
-    {% if intro_title or intro_desc %}
-      <div
-        class="introduction flex w-full flex-col gap-4 px-6 pt-0 pb-20 xl:w-2/3 xl:px-10 xl:pb-30"
-      >
-        {% if intro_title %}
-          <h4 class="heading-h4 font-semibold">{{ intro_title }}</h4>
-        {% endif %}
-        {% if intro_desc %}
-          <p class="text-xl">
-            {{ intro_desc }}
-          </p>
-        {% endif %}
-      </div>
-    {% endif %}
+    {% set _archive_page = function("get_page_by_path", "campus/eventi") %}
+    {% set intro_components = _archive_page ? function("get_field", "archive_intro", _archive_page.ID) : null %}
+    {% for component in intro_components %}
+      {% set layout = component.acf_fc_layout|replace({ "_": "-" }) %}
+      {{ include("components/" ~ layout ~ "/" ~ layout ~ ".twig", { component: component }) }}
+    {% endfor %}
 
     <div id="filters-sentinel" class="h-0"></div>
 
@@ -146,7 +141,8 @@
     pagination: posts.pagination({ show_all: false, mid_size: 3, end_size: 2 })
   } %}
 
-  {% set components = function("get_field", "eventi_components", "option") %}
+  {% set _archive_page = function("get_page_by_path", "campus/eventi") %}
+  {% set components = _archive_page ? function("get_field", "archive_components", _archive_page.ID) : null %}
   {% for component in components %}
     {% set layout = component.acf_fc_layout|replace({ "_": "-" }) %}
     {{

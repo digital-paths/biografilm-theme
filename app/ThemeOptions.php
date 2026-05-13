@@ -73,6 +73,9 @@ class ThemeOptions
                 )->default(true),
                 Text::make("Data", "header_date")->default("5 — 15.06.2026"),
                 Text::make("Luogo", "header_location")->default("Bologna"),
+                Link::make("Link Festival", "header_link_festival")->format("array"),
+                Link::make("Link Industry", "header_link_industry")->format("array"),
+                Link::make("Link Campus", "header_link_campus")->format("array"),
                 Tab::make("Social"),
                 URL::make("Instagram", "social_instagram"),
                 URL::make("Facebook", "social_facebook"),
@@ -85,6 +88,16 @@ class ThemeOptions
                 Text::make("Titolo newsletter", "newsletter_title")->default("Vuoi restare aggiornato?"),
                 Text::make("Testo social media", "newsletter_social_text")->default("Segui Biografilm sui social"),
                 Text::make("Shortcode form", "newsletter_form_shortcode")->default('[gravityform id="3" title="false"]'),
+                Tab::make("Progetti CTA"),
+                Text::make("Titolo", "progetti_cta_titolo")->helperText(
+                    "Titolo della CTA. Mostrato solo nelle pagine singolo Progetto, non nell'archivio.",
+                ),
+                Textarea::make("Descrizione", "progetti_cta_descrizione")->helperText(
+                    "Testo della CTA. Mostrato solo nelle pagine singolo Progetto, non nell'archivio.",
+                ),
+                Link::make("Link", "progetti_cta_link")->helperText(
+                    "Link della CTA. Mostrato solo nelle pagine singolo Progetto, non nell'archivio.",
+                )->format("array"),
                 Tab::make("Footer"),
                 Image::make("Immagine footer", "footer_image")->format("array"),
                 Image::make(
