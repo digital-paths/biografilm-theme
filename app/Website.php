@@ -430,8 +430,8 @@ class Website extends Site
             $breadcrumbs[] = [
                 "url" => "",
                 "title" => function_exists("pll__")
-                    ? pll__("eventi")
-                    : "Events",
+                    ? pll__("Eventi")
+                    : "Eventi",
             ];
         } elseif (is_post_type_archive("progetto")) {
             $campus_page = get_page_by_path("campus");
