@@ -1482,4 +1482,12 @@ class Website extends Site
 
         return get_template_directory_uri() . '/assets/images/share-img/share-img.png';
     }
+
+    #[Action("wpseo_add_opengraph_images")]
+    public function fallback_og_image_add(\WPSEO_OpenGraph_Image $image_container): void
+    {
+        if (!$image_container->has_images()) {
+            $image_container->add_image(get_template_directory_uri() . '/assets/images/share-img/share-img.png');
+        }
+    }
 }
