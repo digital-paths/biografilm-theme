@@ -1,6 +1,213 @@
 
 import Alpine from "alpinejs";
 
+// Auto-click .facetwp-load-more when it enters the viewport, with stagger animation on new cards
+let loadMoreBusy = false;
+let cardCountBeforeLoad = 0;
+
+function makeSearchSkeletonCard() {
+  return `<div class="skeleton-card">
+    <div class="skeleton-image"></div>
+    <div class="skeleton-body">
+      <div class="skeleton-line" style="width:55%;height:1.5rem;"></div>
+      <div class="skeleton-line" style="width:20%;height:0.75rem;"></div>
+      <div class="skeleton-line" style="width:80%;height:0.875rem;"></div>
+    </div>
+  </div>`;
+}
+
+const loadingIndicator = document.createElement("div");
+loadingIndicator.className = "hidden";
+
+document.addEventListener("DOMContentLoaded", () => {
+  const template = document.querySelector(".facetwp-template");
+  if (!template) return;
+  if (document.querySelector("[data-search-card]")) {
+    loadingIndicator.innerHTML = [0,1,2,3,4,5].map(makeSearchSkeletonCard).join("");
+    template.after(loadingIndicator);
+  }
+});
+
+function showFilmSkeletons() {
+  const grid = document.querySelector(".facetwp-template > div");
+  if (!grid) return;
+  grid.querySelectorAll("[data-film-filler]").forEach((el) => el.remove());
+  const compact = grid.hasAttribute("data-compact-cards");
+  for (let i = 0; i < 6; i++) {
+    const card = document.createElement("div");
+    card.dataset.filmSkeleton = "";
+    card.className = "skeleton-film-card";
+    if (i === 5) card.style.borderRight = "1px solid var(--color-stroke)";
+    card.innerHTML = compact
+      ? `<div class="skeleton-body" style="padding:2.5rem 1.5rem;gap:2rem;">
+          <div class="skeleton-line" style="width:45%;height:4rem;"></div>
+          <div style="display:flex;flex-direction:column;flex:1;gap:0.5rem;">
+            <div class="skeleton-line" style="width:75%;height:1.5rem;"></div>
+            <div class="skeleton-line" style="width:90%;height:0.875rem;"></div>
+            <div class="skeleton-line" style="width:80%;height:0.875rem;"></div>
+          </div>
+        </div>`
+      : `<div class="skeleton-image" style="aspect-ratio:16/9;width:100%;"></div>
+        <div class="skeleton-body">
+          <div class="skeleton-line" style="width:70%;height:1rem;"></div>
+          <div class="skeleton-line" style="width:40%;height:0.75rem;"></div>
+        </div>`;
+    grid.appendChild(card);
+  }
+}
+
+function checkLoadMore() {
+  if (loadMoreBusy) return;
+  const btn = document.querySelector(".facetwp-load-more");
+  if (!btn || btn.classList.contains("facetwp-hidden")) return;
+
+  const rect = btn.getBoundingClientRect();
+  if (rect.top < window.innerHeight) {
+    loadMoreBusy = true;
+    cardCountBeforeLoad = document.querySelectorAll("[data-search-card], [data-film-card]").length;
+    if (document.querySelector("[data-search-card]")) {
+      loadingIndicator.classList.remove("hidden");
+    } else if (document.querySelector("[data-programma-grid]")) {
+      showProgrammaSkeletons();
+    } else if (document.querySelector("[data-film-card]")) {
+      showFilmSkeletons();
+    }
+    setTimeout(() => { btn.click(); }, 2500);
+  }
+}
+
+function makeFilmFillers(count) {
+  const f = (cls) => `<div data-film-filler class="${cls}"></div>`;
+  let html = "";
+  if (count % 2 === 1) html += f("border-stroke col-span-1 border-l xl:hidden");
+  if (count % 3 === 1) {
+    html += f("border-stroke 3xl:hidden col-span-1 hidden border-l xl:block");
+    html += f("3xl:hidden col-span-1 hidden xl:block");
+  } else if (count % 3 === 2) {
+    html += f("border-stroke 3xl:hidden col-span-1 hidden border-l xl:block");
+  }
+  if (count % 4 === 1) {
+    html += f("border-stroke 3xl:block col-span-1 hidden border-l");
+    html += f("3xl:block col-span-1 hidden");
+    html += f("3xl:block col-span-1 hidden");
+  } else if (count % 4 === 2) {
+    html += f("border-stroke 3xl:block col-span-1 hidden border-l");
+    html += f("3xl:block col-span-1 hidden");
+  } else if (count % 4 === 3) {
+    html += f("border-stroke 3xl:block col-span-1 hidden border-l");
+  }
+  return html;
+}
+
+function showProgrammaSkeletons() {
+  const grid = document.querySelector("[data-programma-grid]");
+  if (!grid) return;
+
+  const group = document.createElement("div");
+  group.dataset.programmaSkeletons = "";
+  group.className = "skeleton-program-group";
+
+  const hourCol = document.createElement("div");
+  hourCol.className = "skeleton-hour";
+  group.appendChild(hourCol);
+
+  const itemsCol = document.createElement("div");
+  itemsCol.className = "min-w-0 flex-1";
+
+  for (let i = 0; i < 6; i++) {
+    const card = document.createElement("div");
+    card.className = "skeleton-program-card";
+    card.innerHTML = `<div class="skeleton-image"></div>
+      <div class="skeleton-body">
+        <div class="skeleton-line" style="width:60%;height:1.5rem;"></div>
+        <div class="skeleton-line" style="width:35%;height:0.875rem;"></div>
+        <div class="skeleton-line" style="width:80%;height:0.875rem;"></div>
+        <div class="skeleton-line" style="width:45%;height:0.875rem;"></div>
+      </div>`;
+    itemsCol.appendChild(card);
+  }
+
+  group.appendChild(itemsCol);
+  grid.appendChild(group);
+}
+
+function mergeProgrammaGrid() {
+  const template = document.querySelector(".facetwp-template");
+  if (!template) return;
+  const containers = template.querySelectorAll(":scope > [data-programma-grid]");
+  if (containers.length < 2) return;
+
+  const original = containers[0];
+  original.querySelectorAll("[data-programma-skeletons]").forEach((el) => el.remove());
+
+  containers.forEach((container, i) => {
+    if (i === 0) return;
+    container.querySelectorAll(":scope > div").forEach((newGroup) => {
+      newGroup.classList.remove("border-t", "border-t-stroke");
+
+      const hourEl = newGroup.querySelector("[data-sticky-hour] h3");
+      const hourLabel = hourEl ? hourEl.textContent.trim() : null;
+
+      let matched = false;
+      if (hourLabel) {
+        original.querySelectorAll(":scope > div").forEach((origGroup) => {
+          if (matched) return;
+          const origHourEl = origGroup.querySelector("[data-sticky-hour] h3");
+          if (origHourEl && origHourEl.textContent.trim() === hourLabel) {
+            const origItems = origGroup.querySelector(".min-w-0.flex-1");
+            const newItems = newGroup.querySelector(".min-w-0.flex-1");
+            if (origItems && newItems) {
+              Array.from(newItems.children).forEach((item) => origItems.appendChild(item));
+            }
+            matched = true;
+          }
+        });
+      }
+
+      if (!matched) original.appendChild(newGroup);
+    });
+    container.remove();
+  });
+}
+
+function mergeFilmGrid() {
+  if (!document.querySelector("[data-film-card]")) return;
+  const template = document.querySelector(".facetwp-template");
+  if (!template) return;
+  const grids = template.querySelectorAll(":scope > div");
+  if (grids.length < 2) return;
+
+  const original = grids[0];
+  // Remove old fillers and skeletons
+  original.querySelectorAll("[data-film-filler], [data-film-skeleton]").forEach((el) => el.remove());
+  // Move new cards from each appended grid into the original
+  grids.forEach((grid, i) => {
+    if (i === 0) return;
+    grid.querySelectorAll("[data-film-card]").forEach((card) => original.appendChild(card));
+    grid.remove();
+  });
+  // Recalculate fillers
+  const total = original.querySelectorAll("[data-film-card]").length;
+  original.insertAdjacentHTML("beforeend", makeFilmFillers(total));
+}
+
+document.addEventListener("scroll", checkLoadMore, { passive: true });
+document.addEventListener("facetwp-loaded", () => {
+  mergeProgrammaGrid();
+  mergeFilmGrid();
+  loadingIndicator.classList.add("hidden");
+
+  const allCards = document.querySelectorAll("[data-search-card]");
+  const newCards = Array.from(allCards).slice(cardCountBeforeLoad);
+
+  newCards.forEach((card) => { card.style.display = "none"; });
+  newCards.forEach((card, i) => {
+    setTimeout(() => { card.style.display = ""; }, i * 150);
+  });
+
+  loadMoreBusy = false;
+});
+
 // Re-initialize Alpine on elements injected by FacetWP AJAX refreshes
 document.addEventListener("facetwp-loaded", () => {
   document.querySelectorAll(".facetwp-facet [x-data]").forEach((el) => {

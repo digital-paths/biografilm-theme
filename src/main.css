@@ -142,3 +142,126 @@
     transform-origin: left;
   }
 }
+
+.facetwp-hidden {
+  display: none !important;
+}
+
+.facetwp-type-pager {
+  display: none !important;
+}
+
+@keyframes skeletonPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.skeleton-card {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid var(--color-stroke);
+}
+
+@media (min-width: 1024px) {
+  .skeleton-card { flex-direction: row; align-items: flex-end; }
+}
+
+.skeleton-image {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #e0e0e0;
+  flex-shrink: 0;
+  animation: skeletonPulse 1.6s ease-in-out infinite;
+}
+
+@media (min-width: 1024px) {
+  .skeleton-image { width: 16.25rem; aspect-ratio: auto; align-self: stretch; }
+}
+
+.skeleton-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 2.5rem 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .skeleton-body { padding: 1.5rem 2rem; }
+}
+
+.skeleton-line {
+  border-radius: 2px;
+  background: #e0e0e0;
+  animation: skeletonPulse 1.6s ease-in-out infinite;
+}
+
+.skeleton-line + .skeleton-line { animation-delay: 0.1s; }
+.skeleton-line + .skeleton-line + .skeleton-line { animation-delay: 0.2s; }
+
+.skeleton-film-card {
+  grid-column: span 1;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid var(--color-stroke);
+  border-left: 1px solid var(--color-stroke);
+}
+
+.skeleton-film-card .skeleton-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem 1.25rem;
+}
+
+.facetwp-template > div + div {
+  border-top: 0;
+}
+
+.skeleton-program-group {
+  display: flex;
+}
+
+.skeleton-program-group .skeleton-hour {
+  width: 5rem;
+  flex-shrink: 0;
+  border-right: 1px solid var(--color-stroke);
+  border-bottom: 1px solid var(--color-stroke);
+}
+
+@media (min-width: 1024px) {
+  .skeleton-program-group .skeleton-hour { width: 7.5rem; }
+}
+
+.skeleton-program-card {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid var(--color-stroke);
+}
+
+@media (min-width: 1024px) {
+  .skeleton-program-card { flex-direction: row; align-items: stretch; }
+}
+
+.skeleton-program-card .skeleton-image {
+  width: 100%;
+  aspect-ratio: 16/9;
+  flex-shrink: 0;
+}
+
+@media (min-width: 1024px) {
+  .skeleton-program-card .skeleton-image { width: 16.25rem; aspect-ratio: auto; align-self: stretch; }
+}
+
+.skeleton-program-card .skeleton-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 2.5rem 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .skeleton-program-card .skeleton-body { padding: 1.5rem 2rem; }
+}
+

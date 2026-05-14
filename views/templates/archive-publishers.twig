@@ -18,42 +18,40 @@
 {% endblock hero %}
 
 {% block content %}
-  {% set count = posts|length %}
-  {% set remainder_3col = count % 3 %}
-  {% set filler_3col = remainder_3col > 0 ? 3 - remainder_3col : 0 %}
-  {% set remainder_4col = count % 4 %}
-  {% set filler_4col = remainder_4col > 0 ? 4 - remainder_4col : 0 %}
-  {% set is_odd = count % 2 == 1 %}
-  <div class="border-stroke 3xl:grid-cols-4 grid grid-cols-1 border-t md:grid-cols-2 xl:grid-cols-3">
-    {% for item in posts %}
-      {{ include("parts/cards/publishers-card.twig") }}
-    {% endfor %}
-    {% if is_odd %}
-      <div class="border-stroke col-span-1 border-b border-l xl:hidden"></div>
-    {% endif %}
-    {% if filler_3col > 0 %}
-      {% for i in 1..filler_3col %}
-        <div
-          class="border-stroke 3xl:hidden col-span-1 hidden xl:block {{
-          loop.first ? 'border-l' : ''
-          }}"
-        ></div>
+  <div class="facetwp-template">
+    <div data-compact-cards class="border-stroke 3xl:grid-cols-4 grid grid-cols-1 border-t md:grid-cols-2 xl:grid-cols-3">
+      {% for item in posts %}
+        {{ include("parts/cards/publishers-card.twig") }}
       {% endfor %}
-    {% endif %}
-    {% if filler_4col > 0 %}
-      {% for i in 1..filler_4col %}
-        <div
-          class="border-stroke 3xl:block col-span-1 hidden {{
-          loop.first ? 'border-l' : ''
-          }}"
-        ></div>
-      {% endfor %}
-    {% endif %}
-  </div>
 
-  {% include "parts/pagination.twig" with {
-    pagination: posts.pagination({ show_all: false, mid_size: 3, end_size: 2 })
-  } %}
+      {# 2-col fillers #}
+      {% set count = posts|length %}
+      {% if count % 2 == 1 %}
+        <div data-film-filler class="border-stroke col-span-1 border-l xl:hidden"></div>
+      {% endif %}
+
+      {# 3-col fillers #}
+      {% if count % 3 == 1 %}
+        <div data-film-filler class="border-stroke 3xl:hidden col-span-1 hidden border-l xl:block"></div>
+        <div data-film-filler class="3xl:hidden col-span-1 hidden xl:block"></div>
+      {% elseif count % 3 == 2 %}
+        <div data-film-filler class="border-stroke 3xl:hidden col-span-1 hidden border-l xl:block"></div>
+      {% endif %}
+
+      {# 4-col fillers #}
+      {% if count % 4 == 1 %}
+        <div data-film-filler class="border-stroke 3xl:block col-span-1 hidden border-l"></div>
+        <div data-film-filler class="3xl:block col-span-1 hidden"></div>
+        <div data-film-filler class="3xl:block col-span-1 hidden"></div>
+      {% elseif count % 4 == 2 %}
+        <div data-film-filler class="border-stroke 3xl:block col-span-1 hidden border-l"></div>
+        <div data-film-filler class="3xl:block col-span-1 hidden"></div>
+      {% elseif count % 4 == 3 %}
+        <div data-film-filler class="border-stroke 3xl:block col-span-1 hidden border-l"></div>
+      {% endif %}
+    </div>
+  </div>
+  {{ function("do_shortcode", '[facetwp facet="load_more"]') }}
 
   {% set _archive_page = function("get_archive_page", "industry/bio-to-b-drama/contents/publishers") %}
   {% set components = _archive_page ? function("get_field", "archive_components", _archive_page.ID) : null %}

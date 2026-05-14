@@ -630,7 +630,7 @@ class Website extends Site
                 $breadcrumbs[] = [
                     "url" => get_post_type_archive_link("evento"),
                     "title" => function_exists("pll__")
-                        ? pll__("eventi")
+                        ? pll__("Eventi")
                         : "Events",
                 ];
                 $breadcrumbs[] = [

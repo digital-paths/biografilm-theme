@@ -18,7 +18,8 @@
     "johnbillion/extended-cpts": "^5.1",
     "yiisoft/arrays": "^3.2",
     "yard/wp-hook-registrar": "^2.0",
-    "illuminate/collections": "^12.49"
+    "illuminate/collections": "^12.49",
+    "nickdavis/facetwp-infinite-scroll": "^1.2"
   },
   "require-dev": {
     "php-stubs/acf-pro-stubs": "^6.5",

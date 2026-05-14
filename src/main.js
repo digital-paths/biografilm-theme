@@ -8,6 +8,7 @@ Alpine.plugin(collapse);
 
 import "./main.css";
 import "./animations.js";
+import "./fwp/fwp.js";
 
 import.meta.glob("../views/**/*.js", { eager: true });
 import.meta.glob("../views/**/*.css", { eager: true });

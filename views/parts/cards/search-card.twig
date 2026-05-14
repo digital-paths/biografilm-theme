@@ -1,0 +1,79 @@
+{% set thumb_id = function("get_post_thumbnail_id", post.ID) %}
+{% set image_url = thumb_id
+  ? function("get_the_post_thumbnail_url", post.ID, "large")
+  : ""
+%}
+{% set fp = thumb_id
+  ? function("get_post_meta", thumb_id, "focalpoint", true)
+  : null
+%}
+{% set fp_style = fp
+  ? "object-position: " ~ ((fp.left * 100)|round) ~ "% "
+    ~ ((fp.top * 100)|round)
+    ~ "%;"
+  : null
+%}
+
+<div
+  data-search-card
+  class="border-b-stroke group relative flex flex-col border-b transition-colors duration-[1500ms] ease-in-out hover:bg-gray-200 hover:duration-700 lg:flex-row lg:items-end lg:border-b-0"
+>
+  <a
+    href="{{ post.link }}"
+    class="absolute inset-0 z-10 transition-colors duration-300"
+    aria-label="{{ post.title }}"
+  >
+  </a>
+
+  <div
+    class="pointer-events-none relative flex min-w-0 flex-1 flex-col lg:flex-row"
+  >
+    <div
+      class="bg-red relative aspect-video w-full shrink-0 overflow-hidden lg:aspect-auto lg:w-65"
+    >
+      <div
+        class="overlay absolute z-30 h-full w-full bg-transparent [mask-image:radial-gradient(ellipse_at_center,transparent_45%,black_90%)] backdrop-blur-[0px] transition-[backdrop-filter,_-webkit-backdrop-filter] duration-[1500ms] ease-in-out [-webkit-mask-image:radial-gradient(ellipse_at_center,transparent_45%,black_90%)] group-hover:backdrop-blur-[90px] group-hover:duration-700"
+      ></div>
+      <img
+        src="{{
+        image_url
+          ?
+          : function("get_stylesheet_directory_uri")
+            ~ "/assets/images/fallback-img-red.jpg"
+        }}"
+        alt="{{ post.title }}"
+        class="absolute inset-0 h-full w-full {{
+        image_url
+          ? "object-cover"
+          : "object-contain object-center lg:inset-auto lg:top-1/2 lg:left-1/2 lg:h-auto lg:w-full lg:-translate-x-1/2 lg:-translate-y-1/2"
+        }}"
+        {{ image_url ? 'style="' ~ fp_style ~ '"' }}
+      />
+    </div>
+
+    <div
+      class="lg:border-b-stroke flex flex-1 flex-col justify-between gap-8 px-6 py-10 lg:border-b lg:px-8 lg:py-6"
+    >
+      <div class="flex flex-col gap-3">
+        {% if post.title %}
+          <h5 class="text-tight text-2xl! font-semibold">
+            {{ post.title }}
+          </h5>
+        {% endif %}
+        {% if post.post_type %}
+          {% set post_type_obj = function("get_post_type_object", post.post_type) %}
+          <p
+            class="text-tight text-red text-sm font-semibold uppercase"
+          >
+            {{ post_type_obj.labels.singular_name }}
+          </p>
+        {% endif %}
+        {% if post.excerpt %}
+          <p class="text-tight text-base text-black">
+            {{ post.excerpt }}
+          </p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>

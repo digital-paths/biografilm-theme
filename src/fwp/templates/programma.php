@@ -23,7 +23,7 @@
 
     ksort($groups);
     ?>
-    <div class="w-full">
+    <div data-programma-grid class="w-full">
         <?php
         $first_group = true;
         foreach ($groups as $hour_label => $items): ?>

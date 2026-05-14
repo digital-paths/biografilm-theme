@@ -113,39 +113,32 @@
         {# 2-col fillers #}
         {% set count = posts|length %}
         {% if count % 2 == 1 %}
-          <div class="border-stroke col-span-1 border-l xl:hidden"></div>
+          <div data-film-filler class="border-stroke col-span-1 border-l xl:hidden"></div>
         {% endif %}
 
         {# 3-col fillers #}
         {% if count % 3 == 1 %}
-          <div
-            class="border-stroke 3xl:hidden col-span-1 hidden border-l xl:block"
-          ></div>
-          <div class="3xl:hidden col-span-1 hidden xl:block"></div>
+          <div data-film-filler class="border-stroke 3xl:hidden col-span-1 hidden border-l xl:block"></div>
+          <div data-film-filler class="3xl:hidden col-span-1 hidden xl:block"></div>
         {% elseif count % 3 == 2 %}
-          <div
-            class="border-stroke 3xl:hidden col-span-1 hidden border-l xl:block"
-          ></div>
+          <div data-film-filler class="border-stroke 3xl:hidden col-span-1 hidden border-l xl:block"></div>
         {% endif %}
 
         {# 4-col fillers #}
         {% if count % 4 == 1 %}
-          <div class="border-stroke 3xl:block col-span-1 hidden border-l"></div>
-          <div class="3xl:block col-span-1 hidden"></div>
-          <div class="3xl:block col-span-1 hidden"></div>
+          <div data-film-filler class="border-stroke 3xl:block col-span-1 hidden border-l"></div>
+          <div data-film-filler class="3xl:block col-span-1 hidden"></div>
+          <div data-film-filler class="3xl:block col-span-1 hidden"></div>
         {% elseif count % 4 == 2 %}
-          <div class="border-stroke 3xl:block col-span-1 hidden border-l"></div>
-          <div class="3xl:block col-span-1 hidden"></div>
+          <div data-film-filler class="border-stroke 3xl:block col-span-1 hidden border-l"></div>
+          <div data-film-filler class="3xl:block col-span-1 hidden"></div>
         {% elseif count % 4 == 3 %}
-          <div class="border-stroke 3xl:block col-span-1 hidden border-l"></div>
+          <div data-film-filler class="border-stroke 3xl:block col-span-1 hidden border-l"></div>
         {% endif %}
       </div>
     </div>
+    {{ function("do_shortcode", '[facetwp facet="load_more"]') }}
   </section>
-
-  {% include "parts/pagination.twig" with {
-    pagination: posts.pagination({ show_all: false, mid_size: 3, end_size: 2 })
-  } %}
 
   {% set _archive_page = function("get_archive_page", "campus/progetti") %}
   {% set components = _archive_page ? function("get_field", "archive_components", _archive_page.ID) : null %}
