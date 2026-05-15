@@ -203,6 +203,7 @@
 
 .skeleton-text {
   color: #d0d0d0;
+  filter: blur(4px);
   animation: skeletonPulse 1.6s ease-in-out infinite;
   user-select: none;
 }

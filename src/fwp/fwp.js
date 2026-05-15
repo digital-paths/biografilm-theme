@@ -57,7 +57,7 @@ function checkLoadMore() {
     } else if (document.querySelector("[data-film-card]")) {
       showFilmSkeletons();
     }
-    setTimeout(() => { btn.click(); }, 2500);
+    setTimeout(() => { btn.click(); }, 1800);
   }
 }
 
