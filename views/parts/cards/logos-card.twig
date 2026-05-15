@@ -6,10 +6,10 @@
     href="{{ link.url }}"
     target="{{ link.target ? : "_self" }}"
     rel="noopener noreferrer"
-    class="group border-stroke col-span-1 flex flex-col border-b"
+    class="group border-stroke col-span-1 flex flex-col border-b {{ is_last ? 'border-r' : '' }}"
   >
     <div class="border-l-stroke flex flex-1 flex-col border-l px-6 py-10">
-      <div class="flex h-32 items-center">
+      <div class="blur-in flex h-32 items-center">
         {% if image %}
           <img
             src="{{ image.url }}"
@@ -33,9 +33,9 @@
     </div>
   </a>
 {% else %}
-  <div class="border-stroke col-span-1 flex flex-col border-b">
+  <div class="border-stroke col-span-1 flex flex-col border-b {{ is_last ? 'border-r' : '' }}">
     <div class="border-l-stroke flex flex-1 flex-col border-l px-6 py-10">
-      <div class="flex h-32 items-center">
+      <div class="blur-in flex h-32 items-center">
         {% if image %}
           <img
             src="{{ image.url }}"

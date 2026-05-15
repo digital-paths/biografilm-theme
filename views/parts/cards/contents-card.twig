@@ -11,7 +11,10 @@
   <div
     class="flex aspect-video w-full items-start justify-start overflow-hidden"
   >
-    <div class="bg-red flex aspect-square h-full items-center p-10">
+    <div class="bg-red relative flex aspect-square h-full items-center p-10">
+      <div
+        class="overlay-blur overlay absolute inset-0 z-10 bg-transparent backdrop-blur-[50px]"
+      ></div>
       {% if fields.icon %}
         <img
           src="{{ fields.icon.url }}"

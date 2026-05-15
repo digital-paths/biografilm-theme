@@ -31,6 +31,7 @@
     <div
       class="bg-red relative aspect-video w-full shrink-0 overflow-hidden lg:aspect-auto lg:w-65"
     >
+      <div class="overlay-blur absolute z-30 h-full w-full bg-transparent backdrop-blur-[50px]"></div>
       <div
         class="overlay absolute z-30 h-full w-full bg-transparent [mask-image:radial-gradient(ellipse_at_center,transparent_45%,black_90%)] backdrop-blur-[0px] transition-[backdrop-filter,_-webkit-backdrop-filter] duration-[1500ms] ease-in-out [-webkit-mask-image:radial-gradient(ellipse_at_center,transparent_45%,black_90%)] group-hover:backdrop-blur-[90px] group-hover:duration-700"
       ></div>
@@ -42,7 +43,7 @@
             ~ "/assets/images/fallback-img-red.jpg"
         }}"
         alt="{{ post.title }}"
-        class="absolute inset-0 h-full w-full {{
+        class="absolute inset-0 h-full w-full transition-all duration-500 group-hover:scale-[1.1] group-hover:duration-700 {{
         image_url
           ? "object-cover"
           : "object-contain object-center lg:inset-auto lg:top-1/2 lg:left-1/2 lg:h-auto lg:w-full lg:-translate-x-1/2 lg:-translate-y-1/2"
@@ -56,20 +57,20 @@
     >
       <div class="flex flex-col gap-3">
         {% if post.title %}
-          <h5 class="text-tight text-2xl! font-semibold">
+          <h5 class="text-tight blur-in text-2xl! font-semibold">
             {{ post.title }}
           </h5>
         {% endif %}
         {% if post.post_type %}
           {% set post_type_obj = function("get_post_type_object", post.post_type) %}
           <p
-            class="text-tight text-red text-sm font-semibold uppercase"
+            class="text-tight blur-in text-red text-sm font-semibold uppercase"
           >
             {{ post_type_obj.labels.singular_name }}
           </p>
         {% endif %}
         {% if post.excerpt %}
-          <p class="text-tight text-base text-black">
+          <p class="text-tight blur-in text-base text-black">
             {{ post.excerpt }}
           </p>
         {% endif %}

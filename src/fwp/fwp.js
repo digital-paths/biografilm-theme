@@ -5,15 +5,10 @@ import Alpine from "alpinejs";
 let loadMoreBusy = false;
 let cardCountBeforeLoad = 0;
 
-function makeSearchSkeletonCard() {
-  return `<div class="skeleton-card">
-    <div class="skeleton-image"></div>
-    <div class="skeleton-body">
-      <div class="skeleton-line" style="width:55%;height:1.5rem;"></div>
-      <div class="skeleton-line" style="width:20%;height:0.75rem;"></div>
-      <div class="skeleton-line" style="width:80%;height:0.875rem;"></div>
-    </div>
-  </div>`;
+function cloneSkeleton(id) {
+  const tpl = document.getElementById(id);
+  if (!tpl) return null;
+  return tpl.content.firstElementChild.cloneNode(true);
 }
 
 const loadingIndicator = document.createElement("div");
@@ -23,7 +18,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const template = document.querySelector(".facetwp-template");
   if (!template) return;
   if (document.querySelector("[data-search-card]")) {
-    loadingIndicator.innerHTML = [0,1,2,3,4,5].map(makeSearchSkeletonCard).join("");
+    for (let i = 0; i < 6; i++) {
+      const card = cloneSkeleton("tpl-skeleton-search-card");
+      if (card) loadingIndicator.appendChild(card);
+    }
     template.after(loadingIndicator);
   }
 });
@@ -33,25 +31,12 @@ function showFilmSkeletons() {
   if (!grid) return;
   grid.querySelectorAll("[data-film-filler]").forEach((el) => el.remove());
   const compact = grid.hasAttribute("data-compact-cards");
+  const tplId = compact ? "tpl-skeleton-film-card-compact" : "tpl-skeleton-film-card";
   for (let i = 0; i < 6; i++) {
-    const card = document.createElement("div");
+    const card = cloneSkeleton(tplId);
+    if (!card) return;
     card.dataset.filmSkeleton = "";
-    card.className = "skeleton-film-card";
     if (i === 5) card.style.borderRight = "1px solid var(--color-stroke)";
-    card.innerHTML = compact
-      ? `<div class="skeleton-body" style="padding:2.5rem 1.5rem;gap:2rem;">
-          <div class="skeleton-line" style="width:45%;height:4rem;"></div>
-          <div style="display:flex;flex-direction:column;flex:1;gap:0.5rem;">
-            <div class="skeleton-line" style="width:75%;height:1.5rem;"></div>
-            <div class="skeleton-line" style="width:90%;height:0.875rem;"></div>
-            <div class="skeleton-line" style="width:80%;height:0.875rem;"></div>
-          </div>
-        </div>`
-      : `<div class="skeleton-image" style="aspect-ratio:16/9;width:100%;"></div>
-        <div class="skeleton-body">
-          <div class="skeleton-line" style="width:70%;height:1rem;"></div>
-          <div class="skeleton-line" style="width:40%;height:0.75rem;"></div>
-        </div>`;
     grid.appendChild(card);
   }
 }
@@ -115,16 +100,8 @@ function showProgrammaSkeletons() {
   itemsCol.className = "min-w-0 flex-1";
 
   for (let i = 0; i < 6; i++) {
-    const card = document.createElement("div");
-    card.className = "skeleton-program-card";
-    card.innerHTML = `<div class="skeleton-image"></div>
-      <div class="skeleton-body">
-        <div class="skeleton-line" style="width:60%;height:1.5rem;"></div>
-        <div class="skeleton-line" style="width:35%;height:0.875rem;"></div>
-        <div class="skeleton-line" style="width:80%;height:0.875rem;"></div>
-        <div class="skeleton-line" style="width:45%;height:0.875rem;"></div>
-      </div>`;
-    itemsCol.appendChild(card);
+    const card = cloneSkeleton("tpl-skeleton-program-card");
+    if (card) itemsCol.appendChild(card);
   }
 
   group.appendChild(itemsCol);
@@ -133,12 +110,12 @@ function showProgrammaSkeletons() {
 
 function mergeProgrammaGrid() {
   const template = document.querySelector(".facetwp-template");
-  if (!template) return;
+  if (!template) return null;
   const containers = template.querySelectorAll(":scope > [data-programma-grid]");
-  if (containers.length < 2) return;
+  if (containers.length < 2) return null;
 
   const original = containers[0];
-  original.querySelectorAll("[data-programma-skeletons]").forEach((el) => el.remove());
+  const skeletonGroup = original.querySelector("[data-programma-skeletons]");
 
   containers.forEach((container, i) => {
     if (i === 0) return;
@@ -155,9 +132,9 @@ function mergeProgrammaGrid() {
           const origHourEl = origGroup.querySelector("[data-sticky-hour] h3");
           if (origHourEl && origHourEl.textContent.trim() === hourLabel) {
             const origItems = origGroup.querySelector(".min-w-0.flex-1");
-            const newItems = newGroup.querySelector(".min-w-0.flex-1");
-            if (origItems && newItems) {
-              Array.from(newItems.children).forEach((item) => origItems.appendChild(item));
+            const newItemsCol = newGroup.querySelector(".min-w-0.flex-1");
+            if (origItems && newItemsCol) {
+              Array.from(newItemsCol.children).forEach((item) => origItems.appendChild(item));
             }
             matched = true;
           }
@@ -168,42 +145,65 @@ function mergeProgrammaGrid() {
     });
     container.remove();
   });
+
+  return { skeletonGroup };
 }
 
 function mergeFilmGrid() {
-  if (!document.querySelector("[data-film-card]")) return;
+  if (!document.querySelector("[data-film-card]")) return null;
   const template = document.querySelector(".facetwp-template");
-  if (!template) return;
+  if (!template) return null;
   const grids = template.querySelectorAll(":scope > div");
-  if (grids.length < 2) return;
+  if (grids.length < 2) return null;
 
   const original = grids[0];
-  // Remove old fillers and skeletons
-  original.querySelectorAll("[data-film-filler], [data-film-skeleton]").forEach((el) => el.remove());
-  // Move new cards from each appended grid into the original
+  const skeletons = Array.from(original.querySelectorAll("[data-film-skeleton]"));
+  original.querySelectorAll("[data-film-filler]").forEach((el) => el.remove());
+
+  const newCards = [];
   grids.forEach((grid, i) => {
     if (i === 0) return;
-    grid.querySelectorAll("[data-film-card]").forEach((card) => original.appendChild(card));
+    grid.querySelectorAll("[data-film-card]").forEach((card) => newCards.push(card));
     grid.remove();
   });
-  // Recalculate fillers
-  const total = original.querySelectorAll("[data-film-card]").length;
-  original.insertAdjacentHTML("beforeend", makeFilmFillers(total));
+
+  // Put each new card exactly where its skeleton was — blur handles the visual reveal
+  newCards.forEach((card, i) => {
+    if (skeletons[i]) {
+      skeletons[i].replaceWith(card);
+    } else {
+      original.appendChild(card);
+    }
+  });
+  // Remove any leftover skeletons (more skeletons than new cards)
+  skeletons.slice(newCards.length).forEach((sk) => sk.remove());
+
+  return { original, newCards };
 }
 
 document.addEventListener("scroll", checkLoadMore, { passive: true });
 document.addEventListener("facetwp-loaded", () => {
-  mergeProgrammaGrid();
-  mergeFilmGrid();
+  const filmResult = mergeFilmGrid();
+  const programmaResult = mergeProgrammaGrid();
   loadingIndicator.classList.add("hidden");
 
-  const allCards = document.querySelectorAll("[data-search-card]");
-  const newCards = Array.from(allCards).slice(cardCountBeforeLoad);
+  // Film / compact cards: add fillers — blur-in cascade handles the visual reveal
+  if (filmResult) {
+    const { original } = filmResult;
+    original.querySelectorAll("[data-film-filler]").forEach((el) => el.remove());
+    const total = original.querySelectorAll("[data-film-card]").length;
+    original.insertAdjacentHTML("beforeend", makeFilmFillers(total));
+  }
 
-  newCards.forEach((card) => { card.style.display = "none"; });
-  newCards.forEach((card, i) => {
-    setTimeout(() => { card.style.display = ""; }, i * 150);
-  });
+  // Programma: fade out skeleton group — blur-in cascade handles new items
+  if (programmaResult) {
+    const { skeletonGroup } = programmaResult;
+    if (skeletonGroup) {
+      skeletonGroup.style.transition = "opacity 0.4s ease";
+      skeletonGroup.style.opacity = "0";
+      setTimeout(() => skeletonGroup.remove(), 400);
+    }
+  }
 
   loadMoreBusy = false;
 });

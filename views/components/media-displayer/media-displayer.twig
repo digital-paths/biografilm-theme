@@ -91,6 +91,11 @@
             {{ component.title }}
           </h4>
         {% endif %}
+        {% if component.subtitle %}
+          <p class="blur-in text-xl leading-[150%] font-normal">
+            {{ component.subtitle }}
+          </p>
+        {% endif %}
         {% if component.link %}
           <a
             href="{{ component.link.url }}"
@@ -121,8 +126,10 @@
       >
         {% set count = component.items|length %}
         {% set always_even = component.always_even %}
+        {% set is_single = count == 1 %}
         {% set is_odd = count % 2 == 1 %}
         {% set filler_border = borders.filler_border_bottom ? "border-b" : "" %}
+        {% set col_class = is_single ? "col-span-full" : "col-span-1" %}
         {% for item in component.items %}
           {% set is_last = loop.last %}
           {% set hide_last = always_even and is_odd and is_last %}
@@ -141,13 +148,14 @@
               : null
             %}
             <div
-              class="col-span-1 aspect-8/5 w-full cursor-pointer overflow-hidden bg-gray-200 {{
+              class="relative {{ col_class }} aspect-8/5 w-full cursor-pointer overflow-hidden bg-gray-200 {{
               hide_last
                 ? "hidden 3xl:block"
                 : ""
               }}"
               @click="openAt({{ idx }})"
             >
+              <div class="overlay-blur pointer-events-none absolute inset-0 z-30 bg-transparent backdrop-blur-[50px]"></div>
               <img
                 src="{{ item.immagine.url }}"
                 alt="{{ item.immagine.alt }}"
@@ -157,13 +165,14 @@
             </div>
           {% elseif layout == "video_file" and item.file %}
             <div
-              class="col-span-1 aspect-8/5 w-full cursor-pointer bg-black {{
+              class="relative {{ col_class }} aspect-8/5 w-full cursor-pointer overflow-hidden bg-black {{
               hide_last
                 ? "hidden 3xl:block"
                 : ""
               }}"
               @click="openAt({{ idx }})"
             >
+              <div class="overlay-blur pointer-events-none absolute inset-0 z-30 bg-transparent backdrop-blur-[50px]"></div>
               <div class="h-full w-full overflow-hidden">
                 <video
                   class="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
@@ -178,13 +187,14 @@
             </div>
           {% elseif layout == "video_url" and item.url %}
             <div
-              class="relative col-span-1 aspect-8/5 w-full cursor-pointer overflow-hidden bg-black {{
+              class="relative {{ col_class }} aspect-8/5 w-full cursor-pointer overflow-hidden bg-black {{
               hide_last
                 ? "hidden 3xl:block"
                 : ""
               }}"
               @click="openAt({{ idx }})"
             >
+              <div class="overlay-blur pointer-events-none absolute inset-0 z-30 bg-transparent backdrop-blur-[50px]"></div>
               <div
                 class="absolute inset-0 overflow-hidden transition-transform duration-500 hover:scale-105 [&_iframe]:pointer-events-none [&_iframe]:absolute [&_iframe]:inset-0 [&_iframe]:h-full [&_iframe]:w-full"
               >

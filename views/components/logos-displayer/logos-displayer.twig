@@ -45,7 +45,7 @@
       <div class="swiper-wrapper">
         {% for item in component.items %}
           <div class="swiper-slide">
-            {{ include("parts/cards/logos-card.twig") }}
+            {{ include("parts/cards/logos-card.twig", { is_last: loop.last }) }}
           </div>
         {% endfor %}
       </div>

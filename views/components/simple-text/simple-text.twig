@@ -7,13 +7,17 @@
 >
   <div class="flex flex-col gap-6 px-6 py-20 xl:px-10 xl:py-30">
     {% if component.heading %}
-      <h2 class="heading-h4 blur-in font-semibold">{{ component.heading }}</h2>
+      <h2 class="heading-h4 blur-in font-semibold xl:w-4/5">
+        {{ component.heading }}
+      </h2>
     {% endif %}
     {% if component.title %}
-      <h6 class="heading-h5 blur-in font-semibold">{{ component.title }}</h6>
+      <h6 class="heading-h5 blur-in font-semibold xl:w-4/5">
+        {{ component.title }}
+      </h6>
     {% endif %}
     {% if component.content %}
-      <div class="prose blur-in max-w-none text-xl leading-[150%]">
+      <div class="prose blur-in max-w-none text-xl leading-[150%] xl:w-4/5">
         {{ component.content }}
       </div>
     {% endif %}

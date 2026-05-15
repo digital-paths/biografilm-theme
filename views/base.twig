@@ -49,6 +49,19 @@
       </div>
     </div>
 
+    <template id="tpl-skeleton-search-card">
+      {% include "parts/skeletons/skeleton-search-card.twig" %}
+    </template>
+    <template id="tpl-skeleton-film-card">
+      {% include "parts/skeletons/skeleton-film-card.twig" %}
+    </template>
+    <template id="tpl-skeleton-film-card-compact">
+      {% include "parts/skeletons/skeleton-film-card-compact.twig" %}
+    </template>
+    <template id="tpl-skeleton-program-card">
+      {% include "parts/skeletons/skeleton-program-card.twig" %}
+    </template>
+
     {{ function("wp_footer") }}
     {% do action("get_footer", null) %}
   </body>

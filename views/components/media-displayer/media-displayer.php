@@ -14,6 +14,7 @@ use Extended\ACF\Fields\TrueFalse;
 return [
     Tab::make("Generale", "generale_tab"),
     Text::make("Titolo", "title"),
+    Text::make("Sottotitolo", "subtitle"),
     Link::make("Link", "link")->format("array"),
     Tab::make("Media", "media_tab"),
     FlexibleContent::make("Media", "items")

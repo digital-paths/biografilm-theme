@@ -3,7 +3,10 @@
 {% block content %}
   {% if tipo == "doc" %}
     {% if giorni %}
-      <div x-data="{ activeDay: 0 }" x-effect="$nextTick(() => window.dispatchEvent(new CustomEvent('doc-day-changed')))">
+      <div
+        x-data="{ activeDay: 0 }"
+        x-effect="$nextTick(() => window.dispatchEvent(new CustomEvent('doc-day-changed')))"
+      >
         <div id="filters-sentinel" class="h-0"></div>
         <div data-sticky-top class="top-0 z-50">
           <div class="filters-black flex w-full overflow-x-auto bg-black">
@@ -39,7 +42,7 @@
               <div class="w-full">
                 {% for hour in hours %}
                   <div
-                    class="flex {{
+                    class="blur-in flex {{
                     loop.first
                       ? "border-t border-t-stroke"
                       : ""
@@ -63,7 +66,7 @@
                           <div
                             class="flex min-h-60 flex-col justify-between gap-10 px-6 py-6 xl:px-10"
                           >
-                            <div class="flex flex-col gap-3">
+                            <div class="blur-in flex flex-col gap-3">
                               <span class="text-tight text-2xl font-semibold">
                                 {{ evento.titolo }}
                               </span>
@@ -76,15 +79,28 @@
                               {% endif %}
                             </div>
                             <p
-                              class="text-tight mt-1 text-base font-semibold text-black"
+                              class="text-tight blur-in mt-1 text-base font-semibold text-black"
                             >
                               {{ giorno.giorno|it_date_long }} · {{
                                 evento.orario
                               }}
                               {% if evento.location %}
-                                <a href="{{ evento.location.url }}" target="{{ evento.location.target ?: '_self' }}" rel="noopener" class="link-underline ml-6 [--link-underline-height:1px]">{{ evento.location.title }}</a>
+                                <a
+                                  href="{{ evento.location.url }}"
+                                  target="{{
+                                  evento.location.target
+                                    ?
+                                    : "_self"
+                                  }}"
+                                  rel="noopener"
+                                  class="link-underline ml-6 [--link-underline-height:1px]"
+                                >
+                                  {{ evento.location.title }}
+                                </a>
                               {% elseif evento.location_text %}
-                                <span class="ml-6">{{ evento.location_text }}</span>
+                                <span class="ml-6">
+                                  {{ evento.location_text }}
+                                </span>
                               {% endif %}
                             </p>
                           </div>
@@ -115,7 +131,7 @@
             type="button"
             class="border-stroke hover:bg-white-hover active:bg-white-active relative flex shrink-0 cursor-pointer items-center justify-center border-r bg-white px-6 text-black transition-colors focus-visible:z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-black lg:hidden"
             @click="drawerOpen = true"
-            aria-label="{{ function('pll__', 'Apri filtri') }}"
+            aria-label="{{ function("pll__", "Apri filtri") }}"
           >
             {{ include("icons/generic/filters.svg")|attr({ class: "size-5" }) }}
             <span

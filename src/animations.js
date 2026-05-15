@@ -146,7 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("facetwp-loaded", () => {
     ScrollTrigger.refresh();
     pinHourLabels();
-    initBlurEffects();
+    initBlurEffects(true);
   });
 
   // Re-pin when the doc-program day tab changes (hidden sections have no dimensions at load time)
@@ -155,7 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
     pinHourLabels();
   });
 
-  function initBlurEffects() {
+  function initBlurEffects(staggerInView = false) {
     if (isTouch) {
       // On mobile, skip blur effects entirely — clear initial state immediately.
       gsap.utils.toArray(".blur-in").forEach((el) => {
@@ -204,14 +204,15 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // Already-visible elements: animate in together immediately.
+    // Already-visible elements: animate in together, or with stagger for dynamically loaded cards.
     if (inView.length) {
       gsap.to(inView, {
         filter: "blur(0px)",
         duration: 1,
         ease: "power4.out",
-        onComplete: () => {
-          inView.forEach((el) => {
+        ...(staggerInView && { stagger: 0.05 }),
+        onComplete() {
+          this.targets().forEach((el) => {
             el.classList.remove("blur-in");
             gsap.set(el, { clearProps: "filter" });
           });
